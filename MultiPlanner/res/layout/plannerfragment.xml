@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent" >
+
+   <ScrollView
+       android:id="@+id/scrollView1"
+       android:layout_width="wrap_content"
+       android:layout_height="match_parent"
+       android:background="@color/white"
+       android:fillViewport="false"
+       android:measureAllChildren="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp"
+                android:windowSoftInputMode="adjustResize" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.3"
+                        android:gravity="center|fill_horizontal"
+                        android:minHeight="130dp"
+                        android:orientation="vertical"
+                        android:showDividers="none"
+                        android:windowSoftInputMode="adjustResize" >
+
+                        <MultiAutoCompleteTextView
+                            android:id="@+id/from1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:ems="10"
+                            android:hint="@string/from"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:minHeight="40dp" >
+
+                            <requestFocus />
+                        </MultiAutoCompleteTextView>
+
+                        <MultiAutoCompleteTextView
+                            android:id="@+id/from2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:ems="10"
+                            android:hint="@string/from"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:minHeight="40dp" />
+
+                        <MultiAutoCompleteTextView
+                            android:id="@+id/from3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:ems="10"
+                            android:hint="@string/from"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:minHeight="40dp" />
+
+                        <MultiAutoCompleteTextView
+                            android:id="@+id/from4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:ems="10"
+                            android:hint="@string/from"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:minHeight="40dp" />
+
+                        <MultiAutoCompleteTextView
+                            android:id="@+id/to"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:ems="10"
+                            android:hint="@string/to"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:minHeight="40dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="0.1"
+                            android:gravity="center_vertical|center_horizontal" >
+
+                            <TextView
+                                android:id="@+id/ankomst_row"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.59"
+                                android:gravity="center"
+                                android:text="@string/PLAN_ANKOMST"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                            <TextView
+                                android:id="@+id/results_ankomstintervall_textview"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_plusminus"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/search_progress_result"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
+                                android:text="10"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.66"
+                                android:text="@string/minute_display"
+                                android:textAppearance="?android:attr/textAppearanceMedium" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" >
+
+                            <SeekBar
+                                android:id="@+id/search_progress_selector"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.5"
+                                android:max="50"
+                                android:progress="10" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="0.1"
+                        android:gravity="center_horizontal|center_vertical|bottom"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0.2" >
+
+                            <com.berka.multiplanner.Helpers.MyTimePicker24h
+                                android:id="@+id/toTimePicker"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical|center_horizontal|clip_vertical|clip_horizontal"
+                                android:layout_weight="0.8" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:layout_weight="0.5"
+                                android:gravity="center"
+                                android:orientation="vertical" >
+
+                                <Button
+                                    android:id="@+id/Search_datum"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="DATUM" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/searchbutton"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:text="SÖK" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+   <RelativeLayout
+       android:id="@+id/planner_loading"
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent"
+       android:layout_alignParentEnd="false"
+       android:background="#55110000"
+       android:visibility="gone" >
+
+       <ProgressBar
+           android:id="@+id/progressBar1"
+           style="?android:attr/progressBarStyleLarge"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerHorizontal="true"
+           android:layout_centerVertical="true" />
+   </RelativeLayout>
+
+    </RelativeLayout> 
+

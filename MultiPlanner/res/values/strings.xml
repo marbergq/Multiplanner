@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MultiPlanner</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="from">Från</string>
+    <string name="to">Till</string>
+    <string name="ankomst">Ankomst</string>
+    <string name="destination">Till:</string>
+    <string name="dela_resway">DELA RESVÄG</string>
+    <string name="PLAN_ANKOMST">ANKOMST INTERVALL</string>
+    <string name="plan_plusminus">+-</string>
+    <string name="minute_display">MIN</string>
+    <string name="results_loading_text">SÖKER RESA FRÅN:</string>
+    <string name="group_result_from_text">FRÅN:</string>
+    <string name="group_result_to">TILL:</string>
+    <string name="childview_arrival_string">ANKOMST</string>
+    <string name="child_byten_string">BYTEN</string>
+    <string name="search_no_result_match_string">INGA RESULTAT</string>
+    <string name="search_no_matches_subhead">MATCHADE DIN SÖKNING</string>
+    <string name="search_no_results_information_string">PRÖVA ATT FÖRFINA DIN SÖKNING ELLER ANGE ETT ANNAT INTERVALL</string>
+    <string name="share_popup_string">HUR VILL DU DELA RESAN?</string>
+    <string name="ankomst_intervall_1">NÄR VILL NI VARA FRAMME?</string>
+    <string name="ankomst_intervall_2">ANKOMSTINTERVALL, RESANDE</string>
+    <string name="Did_you_mean">Vänligen, specificera: </string>
+</resources>
