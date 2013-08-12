@@ -25,6 +25,9 @@ local.properties
 # CDT-specific
 .cproject
 
+# APIKEY
+APIKEY.java
+
 
 # PDT-specific
 .buildpath
