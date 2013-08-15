@@ -1,5 +1,5 @@
 
-package com.berka.multiplanner.Models;
+package com.berka.multiplanner.Models.Trips;
 
 import org.json.JSONException;
 import org.json.JSONObject;

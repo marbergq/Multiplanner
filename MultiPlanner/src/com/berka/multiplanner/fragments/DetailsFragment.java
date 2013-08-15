@@ -3,26 +3,39 @@ package com.berka.multiplanner.fragments;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.zip.Inflater;
 
-import android.content.Context;
+import android.R.color;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.groupalpha.berka.multiplanner.R;
 import com.berka.multiplanner.Adapters.ExpandableListViewResultAdapter;
+import com.berka.multiplanner.Models.Interface.ITraveler;
 import com.berka.multiplanner.Models.Travel.Segment;
 import com.berka.multiplanner.Models.Travel.Traveler;
+import com.berka.multiplanner.Network.CompanyImageFinder;
+import com.groupalpha.berka.multiplanner.R;
 
 public class DetailsFragment extends Fragment {
 	
 	
-	List<Traveler> travelers;
+	List<ITraveler> travelers;
 	ExpandableListViewResultAdapter adapter;
 	ExpandableListView listView;
 	String to="";
@@ -30,7 +43,7 @@ public class DetailsFragment extends Fragment {
 	public void setData(List<List<Segment>> data)
 	{
 		if(travelers == null)
-			travelers = new ArrayList<Traveler>();
+			travelers = new ArrayList<ITraveler>();
 		else
 			travelers.clear();
 		for(List<Segment> seg : data)
@@ -90,14 +103,112 @@ public class DetailsFragment extends Fragment {
 		toText.setText(to);
 		listView = (ExpandableListView) rootView.findViewById(R.id.expandableListView1);
 		if(travelers == null)
-				travelers=new ArrayList<Traveler>();
+				travelers=new ArrayList<ITraveler>();
 		adapter = new ExpandableListViewResultAdapter(getActivity(),travelers);
 				listView.setAdapter(adapter);
 				expandGroups();
 
+				listView.setOnChildClickListener(
+						childInformationClickHandler());
 				
 				
 		return rootView;
+	}
+
+	private OnChildClickListener childInformationClickHandler() {
+		return new OnChildClickListener() {
+
+@Override
+public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
+		final Segment s = adapter.getChild(groupPosition, childPosition);
+		
+		if(s.getSegmentid().getCarrier() != null)
+		{
+			final Dialog tripDialog = new Dialog(getActivity());
+			tripDialog.setTitle("RESA MED");
+			tripDialog.setContentView(R.layout.tripinfodialog);
+			
+			View includedView = tripDialog.findViewById(R.id.detail_popup_travelplan);
+
+			LinearLayout lv = (LinearLayout)includedView.findViewById(R.id.row_background);
+			if(lv!= null)
+				lv.setBackgroundColor(Color.TRANSPARENT);
+			TextView restyp = (TextView)includedView.findViewById(R.id.child_restyp);
+			TextView linje = (TextView)includedView.findViewById(R.id.child_linje_id_real);
+			TextView from = (TextView)includedView.findViewById(R.id.child_from_place);
+			TextView to = (TextView)includedView.findViewById(R.id.child_to_place);
+			TextView fromTime = (TextView)includedView.findViewById(R.id.child_from_time);
+			TextView toTime = (TextView)includedView.findViewById(R.id.child_to_time);
+			TextView company = (TextView)tripDialog.findViewById(R.id.detail_popup_company_name);
+
+from.setText(s.getDeparture().getLocation()
+			.getDisplayname());
+to.setText(s.getArrival().getLocation().getDisplayname());
+fromTime.setText(s.getDeparture().getDatetime());
+toTime.setText(s.getArrival().getDatetime());
+
+restyp.setText(s.getSegmentid().getCarrier().getName());
+linje.setText(s.getSegmentid().getMot().getText()
+			+ " "
+			+ s.getSegmentid().getCarrier().getNumber()
+					.intValue());
+company.setText(s.getSegmentid().getCarrier().getName());
+			
+			
+			final ImageView companyImage = (ImageView)tripDialog.findViewById(R.id.detail_popup_company_image);
+			
+			CompanyImageFinder finder = new CompanyImageFinder(){
+
+				@Override
+				protected void onPostExecute(Bitmap result) {
+					Log.d("result!", "");
+					if(result != null)
+					{
+						Log.d("RESULT", "NOT NULL!");
+						companyImage.setImageBitmap(result);
+					}else
+						Log.d("RESULT", "NULL!");
+				}
+				
+			};
+			finder.execute(s.getSegmentid().getCarrier().getId().intValue());
+			
+			
+			Button buttonNo = (Button) tripDialog.findViewById(R.id.detail_popup_button_cancel);
+			Button buttonGO = (Button) tripDialog.findViewById(R.id.detail_popup_button_go);
+			
+			
+			
+			
+			buttonNo.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					tripDialog.dismiss();
+					
+				}
+			});
+			
+			buttonGO.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(Intent.ACTION_VIEW, 
+						       Uri.parse(s.getSegmentid().getCarrier().getUrl()));
+						startActivity(i);
+					
+				}
+			});
+			
+			
+			tripDialog.show();
+			return true;
+			
+		}
+		return false;
+}
+};
 	}
 
 }

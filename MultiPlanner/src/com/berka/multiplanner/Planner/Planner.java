@@ -4,7 +4,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-import com.berka.multiplanner.Models.Location;
+
+import com.berka.multiplanner.Models.Trips.Location;
 
 public class Planner extends Observable{
 	String testString;
@@ -78,7 +79,7 @@ public class Planner extends Observable{
 	}
 	public String getDateString()
 	{
-		return ""+getYear()+"-"+(getMonth()<10?"0"+getMonth():getMonth())+"-"+getDay();
+		return ""+getYear()+"-"+(getMonth()<10?"0"+getMonth():getMonth())+"-"+(getDay()<10?("0"+getDay()):getDay());
 		
 	}
 	

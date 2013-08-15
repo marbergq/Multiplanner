@@ -7,16 +7,16 @@ import java.util.List;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.Pair;
 
+import com.berka.multiplanner.Helpers.Interface.IResult;
 import com.berka.multiplanner.Helpers.Logic.MultipleResult;
 import com.berka.multiplanner.Models.ListViewUpdaterModel;
-import com.berka.multiplanner.Models.Trip;
+import com.berka.multiplanner.Models.Trips.Trip;
 
 public class ResultListViewUpdater extends AsyncTask<ListViewUpdaterModel, Integer, List<Trip>> {
-	private final MultipleResult result;
+	private final IResult result;
 	
-	public ResultListViewUpdater(MultipleResult result)
+	public ResultListViewUpdater(IResult result)
 	{
 		this.result=result;
 	}
@@ -33,21 +33,59 @@ public class ResultListViewUpdater extends AsyncTask<ListViewUpdaterModel, Integ
 					List<Trip> tripss;
 					try {
 						tripss = result.getTrips(param.getPlanner(), param.getOnlySelectedStops(),param.getOnlyFastest());
-					
+					if(tripss==null)
+						return;
 					if(tripss.size() != 0)
 						Collections.sort(tripss);
 					trips.addAll(tripss);
-					} catch (ParseException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 						
 					}
 				}
 			};
+			Thread t2 = new Thread(){
+				@Override
+				public void run(){
+					while(true)
+					{
+						if(trips.size()>0){
+							Log.i("FINISH", "ALLDONE");
+							break;
+						}
+						else if(isCancelled()){
+							Log.i("FINISH", "cancel");
+							break;
+						}
+						else
+							try {
+								sleep(50);
+							} catch (InterruptedException e) {
+								Log.i("FINISH", "INTERRUPTED:(");
+								break;
+							}
+					}
+					
+				}
+			}
+			;
 			
+			//start the first thread
 			t.start();
+			//start the isCancelled thread
+			t2.start();
+			//wait for it 
+			t2.join();
+			//kill the loading thread
+			if(t.isAlive())
+				t.interrupt();
+			t=null;
+			t2=null;
 			
-			t.join();
+			Log.i("trips size: ", trips.size()+"");
+			
+			//t.join();
 			
 			
 			return trips;

@@ -4,9 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,15 +15,15 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.berka.multiplanner.Helpers.TimeFilter;
-import com.berka.multiplanner.Models.Location;
-import com.berka.multiplanner.Models.Trip;
+import com.berka.multiplanner.Helpers.Interface.IResult;
 import com.berka.multiplanner.Models.Travel.Mot;
 import com.berka.multiplanner.Models.Travel.Segment;
 import com.berka.multiplanner.Models.Travel.SegmentId;
-import com.berka.multiplanner.Models.Travel.Traveler;
+import com.berka.multiplanner.Models.Trips.Location;
+import com.berka.multiplanner.Models.Trips.Trip;
 import com.berka.multiplanner.Planner.Planner;
 
-public class MultipleResult {
+public class MultipleResult implements IResult {
 
 	HashMap<String, List<List<Segment>>> map;
 	public MultipleResult(HashMap<String,List<List<Segment>>> map)
@@ -100,19 +97,27 @@ public class MultipleResult {
 	{
 		long startTime = System.currentTimeMillis();
 		List<Trip> trips= getTrips(planner,onlySameTimeArrival);
+		if(Thread.currentThread().isInterrupted())
+			return null;
 		if(onlyOneResultPerStation){
 		
 
 			List<Trip> buffs = new LinkedList<Trip>();
 		for(Trip t : trips)
 		{
+			if(Thread.currentThread().isInterrupted())
+				return null;
 			Trip newTrip = new Trip();
 			for(Location l : planner.getFrom())
 			{
+				if(Thread.currentThread().isInterrupted())
+					return null;
 				newTrip.addSegments(filterOutAllbutTheShortest(l,t));
 				
 			}
 			newTrip.setAnkomstTid(findTheLatestTimeInTrip(newTrip));
+			if(Thread.currentThread().isInterrupted())
+				return null;
 			buffs.add(newTrip);
 		}
 		
@@ -212,6 +217,8 @@ public class MultipleResult {
 		Calendar candidate = null;
 		for(List<Segment> seg : trip.getSegments())
 		{
+			if(Thread.currentThread().isInterrupted())
+				return null;
 			if(candidate == null){
 				candidate = TimeFilter.getDateFromString(seg.get(seg.size()-1).getArrival().getDatetime());
 				continue;

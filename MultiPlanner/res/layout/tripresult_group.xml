@@ -9,7 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+         >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,7 +44,7 @@
                 android:layout_marginLeft="5dp" >
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/detail_popup_company_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/childview_arrival_string"
@@ -114,14 +116,13 @@
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_weight="0.20"
                     android:adjustViewBounds="false"
                     android:background="@drawable/background_selector"
                     android:scaleType="matrix"
                     android:src="@drawable/ic_menu_share_holo_light" />
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/detail_popup_company_image"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_alignBottom="@id/imageButton1"

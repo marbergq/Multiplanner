@@ -1,4 +1,4 @@
-package com.berka.multiplanner.Models;
+package com.berka.multiplanner.Models.Trips;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +38,7 @@ public class Trip implements Comparable<Trip>{
 			
 			Calendar endTime = TimeFilter.getDateFromString(segs.get(segs.size()-1).getArrival().getDatetime());
 			
-			long diff = ((long)endTime.getTime().getTime()-(long)StartTime.getTime().getTime());
+			long diff = (endTime.getTime().getTime()-StartTime.getTime().getTime());
 			
 			Log.d("Diff (MS): ", ""+diff+" MS");
 			
@@ -56,7 +56,7 @@ public class Trip implements Comparable<Trip>{
 			
 			Calendar endTime = TimeFilter.getDateFromString(segs.get(segs.size()-1).getArrival().getDatetime());
 			
-			long diff = ((long)endTime.getTime().getTime()-(long)StartTime.getTime().getTime());
+			long diff = (endTime.getTime().getTime()-StartTime.getTime().getTime());
 			
 			Log.d("Diff (MS): ", ""+diff+" MS");
 			
@@ -78,7 +78,7 @@ public class Trip implements Comparable<Trip>{
 		
 		Calendar endTime = TimeFilter.getDateFromString(segs.get(segs.size()-1).getArrival().getDatetime());
 		
-		long diff = ((long)endTime.getTime().getTime()-(long)StartTime.getTime().getTime());
+		long diff = (endTime.getTime().getTime()-StartTime.getTime().getTime());
 		
 		Log.d("Diff (MS): ", ""+diff+" MS");
 		

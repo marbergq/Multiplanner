@@ -24,6 +24,7 @@ public class MyTimePicker24h extends TimePicker {
 		init();
 	}
 	
+	
 	private void init()
 	{
 		setIs24HourView(true);

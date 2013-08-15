@@ -13,13 +13,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:measureWithLargestChild="false"
             android:orientation="vertical" >
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="10dp"
+                android:layout_height="wrap_content"
                 android:windowSoftInputMode="adjustResize" >
 
                 <LinearLayout
@@ -30,80 +31,91 @@
                     android:orientation="vertical" >
 
                     <LinearLayout
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
                         android:layout_weight="0.3"
-                        android:gravity="center|fill_horizontal"
-                        android:minHeight="130dp"
-                        android:orientation="vertical"
-                        android:showDividers="none"
-                        android:windowSoftInputMode="adjustResize" >
+                        android:orientation="vertical" >
 
-                        <MultiAutoCompleteTextView
-                            android:id="@+id/from1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:ems="10"
-                            android:hint="@string/from"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:minHeight="40dp" >
+                        <LinearLayout
+                            android:id="@+id/fromlayout"
+                            android:layout_width="fill_parent"
+                            android:layout_height="0dip"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="0.3"
+                            android:gravity="center|fill_horizontal"
+                            android:orientation="vertical"
+                            android:paddingTop="10dp"
+                            android:showDividers="none"
+                            android:windowSoftInputMode="adjustResize" >
 
-                            <requestFocus />
-                        </MultiAutoCompleteTextView>
+                            <MultiAutoCompleteTextView
+                                android:id="@+id/from1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:ems="10"
+                                android:hint="@string/from"
+                                android:lines="1"
+                                android:maxLines="1"
+                                android:minHeight="40dp" >
+                            
+                                
+                            </MultiAutoCompleteTextView>
 
-                        <MultiAutoCompleteTextView
-                            android:id="@+id/from2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:ems="10"
-                            android:hint="@string/from"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:minHeight="40dp" />
+                            <MultiAutoCompleteTextView
+                                android:id="@+id/from2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:ems="10"
+                                android:hint="@string/from"
+                                android:lines="1"
+                                android:maxLines="1"
+                                android:minHeight="40dp" />
 
-                        <MultiAutoCompleteTextView
-                            android:id="@+id/from3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:ems="10"
-                            android:hint="@string/from"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:minHeight="40dp" />
+                            <MultiAutoCompleteTextView
+                                android:id="@+id/from3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:ems="10"
+                                android:hint="@string/from"
+                                android:lines="1"
+                                android:maxLines="1"
+                                android:minHeight="40dp" />
 
-                        <MultiAutoCompleteTextView
-                            android:id="@+id/from4"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:ems="10"
-                            android:hint="@string/from"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:minHeight="40dp" />
+                            <MultiAutoCompleteTextView
+                                android:id="@+id/from4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:ems="10"
+                                android:hint="@string/from"
+                                android:lines="1"
+                                android:maxLines="1"
+                                android:minHeight="40dp" />
 
-                        <MultiAutoCompleteTextView
-                            android:id="@+id/to"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:ems="10"
-                            android:hint="@string/to"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:minHeight="40dp" />
+                            <MultiAutoCompleteTextView
+                                android:id="@+id/to"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:ems="10"
+                                android:hint="@string/to"
+                                android:lines="1"
+                                android:maxLines="1"
+                                android:minHeight="40dp" >
+
+                                <requestFocus />
+                            </MultiAutoCompleteTextView>
+
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -145,7 +157,7 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
                             <TextView
-                                android:id="@+id/textView1"
+                                android:id="@+id/detail_popup_company_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.66"
@@ -170,10 +182,11 @@
 
                     <LinearLayout
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:layout_weight="0.1"
+                        android:layout_weight="0.5"
+                        android:baselineAligned="false"
                         android:gravity="center_horizontal|center_vertical|bottom"
                         android:orientation="vertical" >
 
@@ -182,26 +195,34 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
-                            android:layout_weight="0.2" >
+                            android:layout_weight="0.4" >
 
                             <com.berka.multiplanner.Helpers.MyTimePicker24h
                                 android:id="@+id/toTimePicker"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|center_horizontal|clip_vertical|clip_horizontal"
                                 android:layout_weight="0.8" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="0.5"
                                 android:gravity="center"
                                 android:orientation="vertical" >
 
                                 <Button
-                                    android:id="@+id/Search_datum"
-                                    android:layout_width="fill_parent"
+                                    android:id="@+id/search_add_from"
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:text="+1 RESINÄR" />
+
+                                <Button
+                                    android:id="@+id/Search_datum"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                     style="?android:attr/buttonStyleSmall"
                                     android:text="DATUM" />
 
                             </LinearLayout>
@@ -215,6 +236,7 @@
                             android:text="SÖK" />
 
                     </LinearLayout>
+
                 </LinearLayout>
             </RelativeLayout>
 

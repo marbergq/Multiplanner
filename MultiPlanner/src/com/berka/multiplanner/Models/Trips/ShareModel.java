@@ -1,4 +1,4 @@
-package com.berka.multiplanner.Models;
+package com.berka.multiplanner.Models.Trips;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.view.View;
@@ -21,19 +22,19 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.berka.multiplanner.Helpers.TimeFilter;
+import com.berka.multiplanner.Models.Interface.ITraveler;
 import com.berka.multiplanner.Models.Travel.Segment;
-import com.berka.multiplanner.Models.Travel.Traveler;
 
 public class ShareModel {
 
-	private Traveler traveler;
+	private ITraveler traveler;
 	
-	public ShareModel(Traveler traveler) {
+	public ShareModel(ITraveler traveler) {
 		// TODO Auto-generated constructor stub
 		this.traveler=traveler;
 	}
 	
-	public Traveler getTraveler()
+	public ITraveler getTraveler()
 	{return traveler;}
 	
 	static class CalendarObject{
@@ -53,7 +54,7 @@ public class ShareModel {
 	
 	{
 		String[] EVENT_PROJECTION = new String[] {
-			    Calendars._ID,                           // 0
+			    BaseColumns._ID,                           // 0
 			    Calendars.ACCOUNT_NAME,                  // 1
 			    Calendars.CALENDAR_DISPLAY_NAME,         // 2
 			    Calendars.OWNER_ACCOUNT                  // 3
@@ -147,12 +148,12 @@ public class ShareModel {
 		Calendar beginTime;
 	
 		//but the standard values
-		beginTime = TimeFilter.getDateFromString(model.getTraveler().getFirstStep().getDeparture().getDatetime());
+		beginTime = TimeFilter.getDateFromString(model.getTraveler().getDeparture().getDatetime());
 		values.put(Events.EVENT_TIMEZONE, beginTime.getTimeZone().getID());
 	Calendar endTime = TimeFilter.getDateFromString(model.getTraveler().getLastSegment().getArrival().getDatetime());
 	values.put(Events.DTSTART, beginTime.getTimeInMillis());
 	values.put(Events.DTEND, endTime.getTimeInMillis());
-	values.put(Events.TITLE, "Resa från: " + model.getTraveler().getFirstStep().getDeparture().getLocation().getDisplayname()+
+	values.put(Events.TITLE, "Resa från: " + model.getTraveler().getDeparture().getLocation().getDisplayname()+
 			" Till: " + model.getTraveler().getLastSegment().getArrival().getLocation().getDisplayname());
 		
 	StringBuilder string = new StringBuilder();

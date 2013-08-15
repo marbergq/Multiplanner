@@ -12,9 +12,12 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -43,7 +47,8 @@ import android.widget.Toast;
 
 import com.berka.multiplanner.MainActivity;
 import com.berka.multiplanner.Helpers.MyTimePicker24h;
-import com.berka.multiplanner.Models.Location;
+import com.berka.multiplanner.Models.Interface.IStop;
+import com.berka.multiplanner.Models.Trips.Location;
 import com.berka.multiplanner.Models.autocomplete.Stop;
 import com.berka.multiplanner.Models.autocomplete.Suggestions;
 import com.berka.multiplanner.Network.AutoComplete;
@@ -51,10 +56,87 @@ import com.berka.multiplanner.Planner.Planner;
 import com.groupalpha.berka.multiplanner.R;
 
 public class SearchFragment extends Fragment implements Observer {
+	
+	private static final String SharedPrefsName="MULTIPLANNERPREFS";
+	private static final String PURCHACED_KEY ="PURCHASE";
+	private static final String FIRST_START ="FIRST";
+	int maximumSearchAllowed = 2;
+	/**
+	 * IS THIS THE FIRST START?
+	 * @return
+	 */
+	private Boolean isFirstStart()
+	{
+		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
+		return settings.getBoolean(FIRST_START, true);
+	}
+	
+	/**
+	 * TO RUN IF THIS IS THE 
+	 */
+	private void initialStart()
+	{
+		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean("PURCHASE", false);
+		editor.commit();
+	}
+	
+	private boolean hasPurchaced()
+	{
+		return true;
+//		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
+//		if(settings.getBoolean(PURCHACED_KEY, false))
+//		{
+//			maximumSearchAllowed=4;
+//			return true;
+//		}else
+//			return false;
+	}
+	
+	/**
+	 * SETUP INAPP BILLING (GET PEOPLE TO PAY FOR THE SERVICE)
+	 */
+	public void setupInAppBilling(final Planner planner)
+	{
+		AlertDialog d = new AlertDialog.Builder(getActivity()).create();
+		d.setMessage("KÖPA APP?");
+		d.setTitle("APPLIKATION INTE KÖPT!");
+		
+		d.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Toast.makeText(getActivity(), "KÖPTE INTE!", Toast.LENGTH_LONG).show();
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+	d.setButton(DialogInterface.BUTTON_POSITIVE, "BUY", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putBoolean("PURCHASE", true);
+				editor.commit();
+				Toast.makeText(getActivity(), "KÖPT!", Toast.LENGTH_LONG).show();
+			
+				MainActivity act = (MainActivity) getActivity();
+				act.getAdapter().ShowResults(planner);
+			}
+		});		
+
+	d.show();
+		
+	}
+	
 	ArrayAdapter<Location> adapter;
 	AutoComplete autocomp;
 	Planner plan;
 	Button okbutton;
+	OnEditorActionListener listner;
 	ArrayList<MultiAutoCompleteTextView> textViews;
 	View rootView;
 	MultiAutoCompleteTextView autoTo;
@@ -104,10 +186,34 @@ public class SearchFragment extends Fragment implements Observer {
 		setupProgressSelector(rootView);
 		setupScrollView(rootView);
 		this.rootView = rootView;
+		addFromMultTextView(rootView);
 		DisplayLoading(false);
+		textViews.get(0).requestFocus();
 		return rootView;
 
-	}private void setupScrollView(View root) {
+	}
+	
+	private void addFromMultTextView(final View root)
+	{
+		Button button =(Button)root.findViewById(R.id.search_add_from);
+		button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			
+				if(textViews.size()<8){
+					LinearLayout scroll = (LinearLayout)root.findViewById(R.id.fromlayout);
+					scroll.addView(createNewMultiCompleteTextView(),scroll.indexOfChild(textViews.get(textViews.size()-2) )+1 );
+				}
+				else
+					Toast.makeText(getActivity(), "Maximaltantal resande är : 8", Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+	
+	
+	private void setupScrollView(View root) {
 		// TODO Auto-generated method stub
 		scrollView =(ScrollView) root.findViewById(R.id.scrollView1);
 		
@@ -115,7 +221,10 @@ public class SearchFragment extends Fragment implements Observer {
 
 	private void ScrollToView(View viewToScrollTo)
 	{
-		float y = viewToScrollTo.getY()-viewToScrollTo.getHeight();
+	
+		float getY=viewToScrollTo.getY();
+		float height = viewToScrollTo.getHeight();
+		float y = getY-height;
 		if(y < 0)
 			y=viewToScrollTo.getY();
 		scrollView.smoothScrollTo((int)viewToScrollTo.getX(), (int)y);
@@ -236,8 +345,16 @@ public class SearchFragment extends Fragment implements Observer {
 	}
 
 	private void goToResultFragment(Planner planner) {
-		MainActivity act = (MainActivity) getActivity();
-		act.getAdapter().ShowResults(planner);
+		Boolean hasBought = hasPurchaced();
+		if(!hasBought && plan.getFrom().size() > maximumSearchAllowed)
+		{
+			setupInAppBilling(planner);
+		}
+		else
+		{
+			MainActivity act = (MainActivity) getActivity();
+			act.getAdapter().ShowResults(planner);
+		}
 	}
 
 	private void SetupOkButton(View viewRoot) {
@@ -330,6 +447,7 @@ public class SearchFragment extends Fragment implements Observer {
 		final ArrayList<Location> results = new ArrayList<Location>();
 		final ArrayAdapter<Location> items = new ArrayAdapter<Location>(
 				getActivity(), android.R.layout.simple_spinner_dropdown_item);
+		
 		final Button button = new Button(getActivity());
 		button.setText("OK");
 		final Spinner spinner = new Spinner(getActivity());
@@ -394,10 +512,14 @@ public class SearchFragment extends Fragment implements Observer {
 		items.setNotifyOnChange(true);
 		autocomp = new AutoComplete() {
 			@Override
-			public void onPostExecute(Suggestions result) {
+			public void onPostExecute(IStop result) {
 				DisplayLoading(false);
 				if (result == null || (result.getStops() == null) || result.getStops().size()==0)
-					return;
+					{
+					textView.setSelection(0, textView.getText().length());
+					textView.requestFocus();
+					Toast.makeText(getActivity(), "Hittade ingen station vid namn: "+textView.getText(), Toast.LENGTH_SHORT).show();
+					return;}
 				for (Location x : result.getStops()) {
 					results.add(x);
 				}
@@ -486,12 +608,12 @@ public class SearchFragment extends Fragment implements Observer {
 	private void setupAsyncTask() {
 		autocomp = new AutoComplete() {
 			@Override
-			public void onPostExecute(Suggestions result) {
-				if (result == null || (result.getStops() == null))
+			public void onPostExecute(IStop result) {
+				if (result == null || (result.getStops() == null) || result.getStops().size() == 0)
 					return;
 				adapter.clear();
 				adapter.addAll(result.getStops());
-
+				
 			}
 		};
 	}
@@ -617,9 +739,28 @@ public class SearchFragment extends Fragment implements Observer {
 		adapter.add(l);
 	}
 
+	
+	private MultiAutoCompleteTextView createNewMultiCompleteTextView(){
+		
+		MultiAutoCompleteTextView view = new MultiAutoCompleteTextView(getActivity());
+		view.setLayoutParams(textViews.get(0).getLayoutParams());
+		view.setAdapter(adapter);
+		setupTextViewDropdowns(view);
+		view.setHint(getActivity().getString(R.string.from));
+		textViews.add(view);
+		setupImeTypesAndListner(view);
+		setupfocusCHangeListener(view);
+		
+		return view;
+		
+	}
+	
 	private void SetupDropdown(View rootView) {
 		adapter = new ArrayAdapter<Location>(getActivity(),
-				android.R.layout.simple_dropdown_item_1line);
+				android.R.layout.simple_dropdown_item_1line){
+			
+		}
+				;
 		Location l = new Location();
 		l.setDisplayname("Loading");
 		l.setLocationid(-1);
@@ -662,56 +803,21 @@ public class SearchFragment extends Fragment implements Observer {
 		setupfocusCHangeListener(auto4);
 		setupfocusCHangeListener(autoTo);
 		
-
-		 OnEditorActionListener listener = new OnEditorActionListener() {
-				
-				@Override
-				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-					   
-		         if ( (event.getAction() == KeyEvent.ACTION_DOWN  ) &&
-		             (event.getKeyCode()== KeyEvent.KEYCODE_ENTER)  )
-		        {               
-		        	 if(v.getId()==autoTo.getId())
-		        	 {
-			           // hide virtual keyboard
-			           InputMethodManager imm = 
-			              (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			           imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-			          
-			           return true;
-		        	 }
-		        	 else
-		        	 {
-		        		 switch(textViews.indexOf(v))
-		        		 {
-			        		 case 0: textViews.get(1).requestFocus();break;
-			        		 case 1: textViews.get(2).requestFocus();break;	
-			        		 case 2: textViews.get(3).requestFocus();break;
-			        		 case 3: autoTo.requestFocus();break;
-		        		 }
-		        		 
-		        		 return true;
-		        	 }
-		        }
-		        
-		        return false;
-				}
-			};
-			autoTo.setOnEditorActionListener(listener);
-			auto1.setOnEditorActionListener(listener);
-			auto2.setOnEditorActionListener(listener);
-			auto3.setOnEditorActionListener(listener);
-			auto4.setOnEditorActionListener(listener);
-	
-		
+		setupListener();
+		 		
+			setupImeTypesAndListner(autoTo);
+			for(int i=0;i < textViews.size();i++)
+				setupImeTypesAndListner(textViews.get(i));
 			
-		
-		
-		// textViews.add(autoTo);
-		
-
 	}
 
+	private void setupImeTypesAndListner(MultiAutoCompleteTextView view)
+	{
+		view.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		view.setRawInputType(InputType.TYPE_CLASS_TEXT); 
+		view.setOnEditorActionListener(listner);
+	}
+	
 	private void setupfocusCHangeListener(MultiAutoCompleteTextView view)
 	{
 		view.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -725,6 +831,52 @@ public class SearchFragment extends Fragment implements Observer {
 				});
 	}
 	
+	private void setupListener()
+	{
+		if(listner==null)
+		listner = new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				   
+				Log.d("here2", "!!!");
+	         if ( actionId == EditorInfo.IME_ACTION_NEXT )
+	        {               
+	        	 if(v.getId()==autoTo.getId())
+	        	 {
+		           // hide virtual keyboard
+		           InputMethodManager imm = 
+		              (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		           imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+		          scrollView.smoothScrollTo(0, scrollView.getBottom());
+		           return true;
+	        	 }
+	        	 else
+	        	 {
+	        		 if(textViews.indexOf(v)+1>=textViews.size())
+	        			 autoTo.requestFocus();
+	        		 else
+	        			 textViews.get(textViews.indexOf(v)+1).requestFocus();
+	        		 
+//	        		 switch(textViews.indexOf(v))
+//	        		 {
+//		        		 case 0: textViews.get(1).requestFocus();break;
+//		        		 case 1: textViews.get(2).requestFocus();break;	
+//		        		 case 2: textViews.get(3).requestFocus();break;
+//		        		 case 3: autoTo.requestFocus();break;
+//	        		 }
+	        		 
+	        		 return true;
+	        	 }
+	        }
+	        
+	        return false;
+			}
+		};
+	}
+	
+	
+
 	@Override
 	public void update(Observable arg0, Object arg1) {
 

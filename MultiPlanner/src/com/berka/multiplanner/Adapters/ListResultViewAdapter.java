@@ -7,16 +7,12 @@ import java.util.List;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnTouchListener;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.berka.multiplanner.Models.Trip;
+import com.berka.multiplanner.Models.Trips.Trip;
 import com.groupalpha.berka.multiplanner.R;
 
 public class ListResultViewAdapter extends ArrayAdapter<Trip> {

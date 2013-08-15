@@ -9,7 +9,6 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,26 +34,25 @@ import android.widget.Toast;
 import com.berka.multiplanner.MainActivity;
 import com.berka.multiplanner.Adapters.ListResultViewAdapter;
 import com.berka.multiplanner.Helpers.ResultListViewUpdater;
+import com.berka.multiplanner.Helpers.Interface.IResult;
 import com.berka.multiplanner.Helpers.Logic.MultipleResult;
 import com.berka.multiplanner.Models.ListViewUpdaterModel;
-import com.berka.multiplanner.Models.Location;
-import com.berka.multiplanner.Models.Trip;
 import com.berka.multiplanner.Models.Travel.Segment;
+import com.berka.multiplanner.Models.Trips.Location;
+import com.berka.multiplanner.Models.Trips.Trip;
 import com.berka.multiplanner.Network.PlanSearchHandler;
 import com.berka.multiplanner.Planner.Planner;
 import com.groupalpha.berka.multiplanner.R;
 
 public class ResultFragment extends Fragment implements Observer {
 	
-	private static final String SharedPrefsName="MULTIPLANNERPREFS";
-	private static final String PURCHACED_KEY ="PURCHASE";
-	private static final String FIRST_START ="FIRST";
+	
 	private Planner planner;
 	ListResultViewAdapter adapter;
 	CheckBox AnkomstSammaTid;
 	CheckBox SnabbasteResväg;
 	PlanSearchHandler handler;
-	MultipleResult results;
+	IResult results;
 	TextView seekbarText;
 	SeekBar bar;
 	ProgressBar progressBar;
@@ -66,37 +64,7 @@ public class ResultFragment extends Fragment implements Observer {
 	List<TextView> fromTrips = new LinkedList<TextView>();
 	private TextView AnkomstIntervallText;
 	
-	/**
-	 * IS THIS THE FIRST START?
-	 * @return
-	 */
-	private Boolean isFirstStart()
-	{
-		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
-		return settings.getBoolean(FIRST_START, true);
-	}
 	
-	/**
-	 * TO RUN IF THIS IS THE 
-	 */
-	private void initialStart()
-	{
-		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putBoolean("PURCHASE", false);
-		editor.commit();
-	}
-	
-	/**
-	 * SETUP INAPP BILLING (GET PEOPLE TO PAY FOR THE SERVICE)
-	 */
-	private void setupInAppBilling()
-	{
-		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
-		settings.getBoolean(PURCHACED_KEY, false);
-		
-		
-	}
 	
 	
 	public Planner getPlanner()
@@ -149,7 +117,6 @@ public class ResultFragment extends Fragment implements Observer {
 	}
 	
 
-	@SuppressWarnings("unchecked")
 	private void updateListView()
 	{
 		if(asyncListViewUpdater != null)
@@ -177,8 +144,8 @@ public class ResultFragment extends Fragment implements Observer {
 			@Override
 			protected void onCancelled()
 			{
-				//loadingListViewLayout.setVisibility(View.GONE);
-				//displayNoResults();
+				loadingListViewLayout.setVisibility(View.GONE);
+				displayNoResults();
 			}
 		};
 		
@@ -321,14 +288,19 @@ public class ResultFragment extends Fragment implements Observer {
 		 handler= new PlanSearchHandler(progressBar,progressText){
 			@Override
 			protected 
-			void onPostExecute(MultipleResult result)
+			void onPostExecute(IResult result)
 			{
 				try {
 					if(result != null){
 					adapter.clear();
 					List<Trip> trips;
 					
-						trips = result.getTrips(planner,AnkomstSammaTid.isChecked(),SnabbasteResväg.isChecked());
+					trips = result.getTrips(planner,AnkomstSammaTid.isChecked(),SnabbasteResväg.isChecked());
+					if(trips==null){
+						adapter.clear();
+						adapter.notifyDataSetChanged();
+						return;
+					}
 					if(trips.size() != 0)
 						Collections.sort(trips);
 					adapter.addAll(trips);
@@ -345,7 +317,7 @@ public class ResultFragment extends Fragment implements Observer {
 					displayNoResults();
 					Toast.makeText(getActivity(), "error", Toast.LENGTH_LONG).show();
 				}
-			} catch (ParseException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				displayNoResults();
 				Toast.makeText(getActivity(), "error", Toast.LENGTH_LONG).show();

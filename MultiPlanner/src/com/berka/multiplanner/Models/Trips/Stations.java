@@ -1,5 +1,5 @@
 
-package com.berka.multiplanner.Models;
+package com.berka.multiplanner.Models.Trips;
 
 public class Stations{
    	private Findlocationresult findlocationresult;

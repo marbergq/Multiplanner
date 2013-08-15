@@ -4,7 +4,7 @@ package com.berka.multiplanner.Models.Travel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.berka.multiplanner.Models.Location;
+import com.berka.multiplanner.Models.Trips.Location;
 
 public class Arrival{
    	private String datetime;

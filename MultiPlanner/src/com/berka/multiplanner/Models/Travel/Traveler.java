@@ -2,7 +2,9 @@ package com.berka.multiplanner.Models.Travel;
 
 import java.util.List;
 
-public class Traveler {
+import com.berka.multiplanner.Models.Interface.ITraveler;
+
+public class Traveler implements ITraveler {
 	
 	List<Segment> steps;
 
@@ -23,6 +25,11 @@ public class Traveler {
 
 	public void setSteps(List<Segment> steps) {
 		this.steps = steps;
+	}
+
+	@Override
+	public Departure getDeparture() {
+		return getFirstStep().getDeparture();
 	}
 	
 

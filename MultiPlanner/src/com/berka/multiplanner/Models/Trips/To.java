@@ -1,5 +1,5 @@
 
-package com.berka.multiplanner.Models;
+package com.berka.multiplanner.Models.Trips;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,33 +8,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class From{
+public class To{
    	private List<Location> location;
 
-   	public From(JSONObject object) throws JSONException
+   	public To(JSONObject object) throws JSONException
    	{
    		location = new ArrayList<Location>();
    		try
    		{
    			JSONArray array = object.getJSONArray("location");
    			
-   			for(int i = 0,q=0; i < array.length(); i++)
+   			for(int i = 0; i < array.length(); i++)
    			{
-   				if(q > 7)
-   					break;
    				try{
-   					location.add(new Location(array.getJSONObject(i)));
-   					q++;
+   				location.add(new Location(array.getJSONObject(i)));
    				}catch(Exception e)
    				{
-   					//continue
+   					
    				}
    			}
    			
    			
    		}catch(JSONException e)
    		{
-   			//object not array
+   			//object
    			location.add(new Location(object.getJSONObject("location")));
    			
    		}

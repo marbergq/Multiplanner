@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,10 +13,8 @@ import android.graphics.Color;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageButton;
@@ -25,11 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.groupalpha.berka.multiplanner.R;
-import com.berka.multiplanner.Models.ShareModel;
-import com.berka.multiplanner.Models.Trip;
+import com.berka.multiplanner.Models.Interface.ITraveler;
 import com.berka.multiplanner.Models.Travel.Segment;
-import com.berka.multiplanner.Models.Travel.Traveler;
+import com.berka.multiplanner.Models.Trips.ShareModel;
+import com.berka.multiplanner.Models.Trips.Trip;
+import com.groupalpha.berka.multiplanner.R;
 
 public class ExpandableListViewResultAdapter extends BaseExpandableListAdapter {
 
@@ -47,12 +44,12 @@ public class ExpandableListViewResultAdapter extends BaseExpandableListAdapter {
 		TextView toTime;
 	}
 
-private List<Traveler> itemList;
+private List<ITraveler> itemList;
 private final Context context;
 List<Pair<Integer,Integer>> toPaintGreen;
 
 
-public ExpandableListViewResultAdapter(Context context, List<Traveler> itemList) {
+public ExpandableListViewResultAdapter(Context context, List<ITraveler> itemList) {
 		this.context = context;
         this.itemList = itemList;
         
@@ -68,7 +65,7 @@ public void notifyDataSetChanged()
 }
 
 
-public void changeData(List<Traveler> itemList)
+public void changeData(List<ITraveler> itemList)
 {
 	this.itemList.clear();
 	this.itemList.addAll(itemList);
@@ -83,7 +80,7 @@ public Segment getChild(int groupPosition, int childPosition) {
 
 @Override
 public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
+        return groupPosition+childPosition;
 }
 
 @Override
@@ -106,18 +103,9 @@ public View getChildView(int groupPosition, int childPosition, boolean isLastChi
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.activity_main, null);
                 resultView = infalInflater.inflate(R.layout.tripresult_group_detail, null); //TODO change layout id
-//               TextView fromPlace = (TextView) resultView.findViewById(R.id.child_from_place);
-//               holder.toPlace = (TextView) resultView.findViewById(R.id.child_to_place);
-//               holder.toTime = (TextView) resultView.findViewById(R.id.child_to_time);
-//               holder.fromTime = (TextView)resultView.findViewById(R.id.child_from_time);
-//               holder.linje = (TextView)resultView.findViewById(R.id.child_linje_id);
-//               holder.restyp = (TextView)resultView.findViewById(R.id.child_restyp);
-//               
-//                resultView.setTag(holder);
+
         } 
-//        else {
-//                holder = (ChildViewHolder) resultView.getTag();
-//        }
+
 
         final Segment item = getChild(groupPosition, childPosition);
         
@@ -266,7 +254,7 @@ private void shouldBackgroundbeGreen()
 	
 }
 @Override
-public Traveler getGroup(int groupPosition) {
+public ITraveler getGroup(int groupPosition) {
         return itemList.get(groupPosition);
 }
 
@@ -303,7 +291,7 @@ public View getGroupView(int groupPosition, boolean isExpanded, View theConvertV
         RelativeLayout changeBg =(RelativeLayout)resultView.findViewById(R.id.group_on_share_);
         ImageButton shareButton = (ImageButton)resultView.findViewById(R.id.imageButton1);
         
-        final Traveler item = getGroup(groupPosition);
+        final ITraveler item = getGroup(groupPosition);
         Resinär.setText(item.getSteps().get(0).getDeparture().getLocation().getDisplayname());
         List<Segment> segments = item.getSteps();
         tidFramme.setText(item.getSteps().get(item.getSteps().size()-1).getArrival().getDatetime());
@@ -335,11 +323,11 @@ static class ShareOnClickListener implements OnClickListener
 
 {
 	Context context;
-	Traveler traveler;
+	ITraveler traveler;
 	RelativeLayout layout;
 	RelativeLayout parent;
 	ImageButton button;
-	public ShareOnClickListener(Context context,Traveler traveler,RelativeLayout parent, RelativeLayout layout,ImageButton button)
+	public ShareOnClickListener(Context context,ITraveler traveler,RelativeLayout parent, RelativeLayout layout,ImageButton button)
 	{
 		this.context = context;
 		this.traveler = traveler;
@@ -364,7 +352,7 @@ static class ShareOnClickListener implements OnClickListener
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 
-					if(which == AlertDialog.BUTTON_POSITIVE)
+					if(which == DialogInterface.BUTTON_POSITIVE)
 					{
 						
 						ShareModel.addToCalender(new ShareModel(traveler), context);
@@ -372,7 +360,7 @@ static class ShareOnClickListener implements OnClickListener
 					}else
 					{
 						StringBuilder b = new StringBuilder();
-						b.append("FRÅN: "+traveler.getSteps().get(0).getDeparture().getLocation().getDisplayname()+" "+traveler.getSteps().get(0).getDeparture().getDatetime()+"\n");
+						b.append("FRÅN: "+traveler.getDeparture().getLocation().getDisplayname()+" "+traveler.getDeparture().getDatetime()+"\n");
 						for(Segment s : traveler.getSteps())
 						{
 							b.append("TA: "+s.getSegmentid().getMot().getText() + " " +(s.getSegmentid().getCarrier()==null?"":s.getSegmentid().getCarrier().getNumber().intValue())+" "+
@@ -381,7 +369,7 @@ static class ShareOnClickListener implements OnClickListener
 						}
 						final Intent sendIntent = new Intent();
 						sendIntent.setAction(Intent.ACTION_SEND);
-						sendIntent.putExtra(Intent.EXTRA_TEXT, "");
+						sendIntent.putExtra(Intent.EXTRA_TEXT, b.toString());
 						sendIntent.setType("text/plain");
 						context.startActivity(Intent.createChooser(sendIntent, context.getResources().getString(R.string.dela_resway)));
 					}
@@ -389,8 +377,8 @@ static class ShareOnClickListener implements OnClickListener
 			}
 		}; 
 		
-		dialog.setButton(AlertDialog.BUTTON_POSITIVE, "KALENDER", listener);
-		dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "ANNAT", listener);
+		dialog.setButton(DialogInterface.BUTTON_POSITIVE, "KALENDER", listener);
+		dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "ANNAT", listener);
 		dialog.show();
 		Log.d("Click on group", "!!!!!!!!!!!!!!");
 		

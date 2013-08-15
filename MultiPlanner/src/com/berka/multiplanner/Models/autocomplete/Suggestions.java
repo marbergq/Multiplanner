@@ -7,9 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.berka.multiplanner.Models.Location;
+import com.berka.multiplanner.Models.Interface.IStop;
+import com.berka.multiplanner.Models.Trips.Location;
 
-public class Suggestions {
+public class Suggestions implements IStop{
 
 	List<Location> stops;
 	public List<Location> getStops() {

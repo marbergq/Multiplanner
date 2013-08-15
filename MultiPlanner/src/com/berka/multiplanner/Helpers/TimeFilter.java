@@ -14,8 +14,8 @@ import java.util.Set;
 
 import android.util.Log;
 
-import com.berka.multiplanner.Models.Trip;
 import com.berka.multiplanner.Models.Travel.Segment;
+import com.berka.multiplanner.Models.Trips.Trip;
 import com.berka.multiplanner.Planner.Planner;
 
 public class TimeFilter {

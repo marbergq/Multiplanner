@@ -3,7 +3,7 @@ package com.berka.multiplanner.Models.autocomplete;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.berka.multiplanner.Models.Location;
+import com.berka.multiplanner.Models.Trips.Location;
 
 public class Stop extends Location {
 
@@ -15,6 +15,8 @@ public class Stop extends Location {
 		x = jsonObject.getString("xcoord");
 		y = jsonObject.getString("ycoord");
 		displayname = jsonObject.getString("value");
+			if(!displayname.contains(" "))
+				throw new JSONException("not a hlp");
 		locationid = Double.parseDouble(removeStartingZeros(jsonObject
 				.getString("extId")));
 		theAllmightyJSON = jsonObject;

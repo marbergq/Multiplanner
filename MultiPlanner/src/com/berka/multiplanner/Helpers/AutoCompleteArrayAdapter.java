@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.groupalpha.berka.multiplanner.R;
-import com.berka.multiplanner.Models.Location;
+import com.berka.multiplanner.Models.Trips.Location;
 
 public class AutoCompleteArrayAdapter extends ArrayAdapter<Location> {
 
