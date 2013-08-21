@@ -4,4 +4,5 @@
     <color name="default_text_color">#000000</color>
     <color name="header_color">#1FF023</color>
     <color name="android_blue">#33b5e5</color>
+    <color name="Gray">#c0c0c0</color>
 </resources>

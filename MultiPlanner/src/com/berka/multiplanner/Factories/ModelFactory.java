@@ -33,7 +33,7 @@ public class ModelFactory implements IModel{
 		return new Suggestions(
 				EntityUtils.toString(
 						entity
-						,HTTP.UTF_8)
+						)
 						);
 	}
 	

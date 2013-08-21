@@ -1,17 +1,18 @@
 package com.berka.multiplanner.Network;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.berka.multiplanner.Factories.AbstractFactory;
 import com.berka.multiplanner.Factories.Interface.IURL;
+import com.berka.multiplanner.Helpers.ExtendedEntityUtils;
 import com.berka.multiplanner.Helpers.Interface.IResult;
 import com.berka.multiplanner.Models.Travel.Timetableresult;
 import com.berka.multiplanner.Models.Trips.Location;
@@ -51,6 +53,7 @@ public class PlanSearchHandler extends AsyncTask<Planner, Integer, IResult> {
 			final Planner[] planner = arg0;
 			max = planner[0].getFrom().size();
 			bar.setProgress(0);
+		//	text.setText("...");
 			bar.setMax(max);
 			index = 0;
 			List<Timetableresult> result = new ArrayList<Timetableresult>();
@@ -64,6 +67,7 @@ public class PlanSearchHandler extends AsyncTask<Planner, Integer, IResult> {
 			publishProgress(index);
 			
 			for (final Location from : planner[0].getFrom()) {
+
 				Thread t = new Thread() {
 					
 					@Override
@@ -71,15 +75,14 @@ public class PlanSearchHandler extends AsyncTask<Planner, Integer, IResult> {
 						try {
 
 							DefaultHttpClient client = (DefaultHttpClient) AbstractFactory.getIURLFactory().getClient();
-
-							// HttpGet request = new
-							// HttpGet(searchUrl+"&fromId="+arg0[0].getFrom().get(0)+"&toId="+arg0[0].getTo()+"&searchType=F");
-							
+		
 							
 							HttpGet request = (HttpGet) AbstractFactory.getIURLFactory().makeRequest(IURL.SEARCH, new Object[]{from,planner});
-							
-							JSONObject obj = new JSONObject(EntityUtils.toString(client.execute(request).getEntity(),HTTP.UTF_8));
-
+					
+						
+							JSONObject obj = new JSONObject(ExtendedEntityUtils.toString(client.execute(request)));
+							if(isCancelled())
+								return;
 							saferesult.add(new Timetableresult(obj));
 							publishProgress(++index);
 						} catch (JSONException e) {
@@ -106,6 +109,8 @@ public class PlanSearchHandler extends AsyncTask<Planner, Integer, IResult> {
 			}
 			// Wait for all the threads to finish
 			for (Thread t : threadOfLists) {
+				if(isCancelled())
+					return null;
 				t.join();
 			}
 			
@@ -126,6 +131,7 @@ public class PlanSearchHandler extends AsyncTask<Planner, Integer, IResult> {
 		}
 
 	}
+
 	
 	 @Override
 	    protected void onProgressUpdate(final Integer... values) {

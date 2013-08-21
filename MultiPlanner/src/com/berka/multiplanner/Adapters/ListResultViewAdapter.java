@@ -83,7 +83,7 @@ public class ListResultViewAdapter extends ArrayAdapter<Trip> {
 //	       {
 	    	   
 	    	   ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.ALPHA, 0,1);
-     	       animator.setDuration(600);
+     	       animator.setDuration(300);
      
      	        animator.start();
 //	       }

@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.berka.multiplanner.Helpers.TimeFilter;
@@ -19,10 +20,38 @@ public class Trip implements Comparable<Trip>{
 	String ankomstTid;
 	List<List<Segment>> segments;
 	String to;
-	
+	Calendar ankomstTidCalendar;
 	public String getAnkomstTid() {
 		return ankomstTid;
 	}
+	
+	public Calendar getAnkomstTidCalendar() throws ParseException
+	{
+		if(ankomstTidCalendar!=null)
+			return ankomstTidCalendar;
+		else
+		ankomstTidCalendar= TimeFilter.getDateFromString(getAnkomstTid());
+		return ankomstTidCalendar;
+	}
+	
+	public String getAnkomstTID() throws ParseException
+	{
+		if(ankomstTidCalendar== null)
+			getAnkomstTidCalendar();
+		return ankomstTidCalendar.get(Calendar.HOUR_OF_DAY)+":"+
+				ankomstTidCalendar.get(Calendar.MINUTE);
+		
+	}
+	
+	public String getAnkomstDatum() throws ParseException
+	{
+		if(ankomstTidCalendar== null)
+			getAnkomstTidCalendar();
+		return ankomstTidCalendar.get(Calendar.YEAR)+
+				"-"+ankomstTidCalendar.get(Calendar.MONTH)+
+				"-"+ankomstTidCalendar.get(Calendar.DAY_OF_MONTH);
+	}
+	
 	public void setAnkomstTid(String ankomstTid) {
 		this.ankomstTid = ankomstTid;
 	}

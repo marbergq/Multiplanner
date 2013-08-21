@@ -206,9 +206,10 @@ public class MainActivity extends FragmentActivity {
 			if (fragments.size() <= 1) {
 				fra = new ResultFragment();
 				fra.setRetainInstance(true);
-				fra.setPlanner(planner);
+				
 				fragments.add(fra);
 				this.notifyDataSetChanged();
+				fra.setPlanner(planner);
 				ac.getViewPager().setCurrentItem(getCount() - 1, true);
 
 			} else if (fragments.size() == 3) {
@@ -218,17 +219,18 @@ public class MainActivity extends FragmentActivity {
 				fra = (ResultFragment) fragments.get(1);
 				// DetailsFragment fragment2 =
 				// (DetailsFragment)fragments.get(2);
-				fra.setPlanner(planner);
+				
 				this.notifyDataSetChanged();
-
+				fra.setPlanner(planner);
 				ac.getViewPager().setCurrentItem(1, true);
 				// removeDetailFramgent();
 				this.notifyDataSetChanged();
 
 			} else {
 				fra = (ResultFragment) fragments.get(1);
-				fra.setPlanner(planner);
+				
 				this.notifyDataSetChanged();
+				fra.setPlanner(planner);
 				ac.getViewPager().setCurrentItem(getCount() - 1, true);
 			}
 

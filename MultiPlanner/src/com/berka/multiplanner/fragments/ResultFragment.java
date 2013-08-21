@@ -59,12 +59,10 @@ public class ResultFragment extends Fragment implements Observer {
 	TextView progressText;
 	LinearLayout placeTripsLayout;
 	ResultListViewUpdater asyncListViewUpdater;
-	RelativeLayout loadingListViewLayout;
+	RelativeLayout loadingListViewWithContent;
 	RelativeLayout noResultsView;
 	List<TextView> fromTrips = new LinkedList<TextView>();
 	private TextView AnkomstIntervallText;
-	
-	
 	
 	
 	public Planner getPlanner()
@@ -78,14 +76,16 @@ public class ResultFragment extends Fragment implements Observer {
 			Log.d("MartinINFO", "Canceld? "+handler.cancel(true));
 			
 		}
-		this.planner = planner;
-		
-	
+				this.planner = planner;
+				this.planner.addObserver(this);
+				
 		if(adapter != null){
-			getActivity().findViewById(R.id.load).setVisibility(View.VISIBLE);
 			SearchForTrips();
+			updateTripTable();
+			
 		}
-		updateTripTable();
+		
+		
 		
 	}
 	
@@ -119,50 +119,80 @@ public class ResultFragment extends Fragment implements Observer {
 
 	private void updateListView()
 	{
+		Log.i("updateListView", "");
 		if(asyncListViewUpdater != null)
 			asyncListViewUpdater.cancel(true);
+		
 		asyncListViewUpdater = new ResultListViewUpdater(results){
 			@Override
 			protected 
 			void onPostExecute(List<Trip> result){
+				
 				if(result != null){
 					
 				adapter.addAll(result);
 				adapter.notifyDataSetChanged();
 				
-				loadingListViewLayout.setVisibility(View.GONE);
-				displayNoResults();
 				}else
 				{
-					loadingListViewLayout.setVisibility(View.GONE);
-					displayNoResults();
 					Log.e("ListViewUpdater", "Was NUll");
+					
 				}
-				
+				endListLoad();
 			}
 			
 			@Override
 			protected void onCancelled()
 			{
-				loadingListViewLayout.setVisibility(View.GONE);
-				displayNoResults();
+
 			}
 		};
-		
+		startListLoad();
 		asyncListViewUpdater.execute(new ListViewUpdaterModel(planner,AnkomstSammaTid.isChecked(),SnabbasteResväg.isChecked()));
-		loadingListViewLayout.setVisibility(View.VISIBLE);
 		
+	}
+	
+	private void startSearch()
+	{
+		getActivity().findViewById(R.id.load).setVisibility(View.VISIBLE);
+	}
+	
+	private void endSearch()
+	{
+		getActivity().findViewById(R.id.load).setVisibility(View.INVISIBLE);
+	}
+	
+	private void startListLoad()
+	{
+		Log.i("startListLoad", "");
+		
+		noResultsView.setVisibility(View.INVISIBLE);
+		if(loadingListViewWithContent.getVisibility() != View.VISIBLE)
+			loadingListViewWithContent.setVisibility(View.VISIBLE);
+		
+	}
+	
+	private void endListLoad()
+	{
+		Log.i("endListLoad", "");
+		loadingListViewWithContent.setVisibility(View.INVISIBLE);
+		noResultsView.setVisibility(View.INVISIBLE);
+		displayNoResults();
 	}
 	
 	private void displayNoResults()
 	{
-		Log.d("ADAPTER MSG", "Adapter Count: "+adapter.getCount());
+		Log.i("ADAPTER MSG", "Adapter Count: "+adapter.getCount());
 		if(adapter.getCount()==0)
 			noResultsView.setVisibility(View.VISIBLE);
 		else
 			noResultsView.setVisibility(View.GONE);
 		
 	}
+	
+	
+	
+	
 	
 	private void goToDetailFragment(List<List<Segment>> data)
 	{
@@ -179,7 +209,7 @@ public class ResultFragment extends Fragment implements Observer {
 		placeTripsLayout = (LinearLayout)rootView.findViewById(R.id.result_place_trips);
 		
 		ListView list = (ListView) rootView.findViewById(R.id.resultlist);
-		planner.addObserver(this);
+		
 		adapter = new ListResultViewAdapter(getActivity(),R.id.resultlist,new ArrayList<Trip>());
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -200,12 +230,10 @@ public class ResultFragment extends Fragment implements Observer {
 		progressBar = (ProgressBar)rootView.findViewById(R.id.progressBar2);
 		progressText = (TextView)rootView.findViewById(R.id.result_search_progress_text);
 		AnkomstSammaTid = (CheckBox)rootView.findViewById(R.id.result_only_selected_stops);
-		loadingListViewLayout =(RelativeLayout)rootView.findViewById(R.id.result_loading_listView);
+		loadingListViewWithContent =(RelativeLayout)rootView.findViewById(R.id.result_loading_listView);
 		noResultsView = (RelativeLayout)rootView.findViewById(R.id.Results_no_results);
 		SnabbasteResväg =(CheckBox)rootView.findViewById(R.id.result_only_fastest_stops);
 		
-		if(savedInstanceState == null)
-		SearchForTrips();
 		
 		setupMenu(rootView);
 		checkBoxListener(AnkomstSammaTid);
@@ -239,8 +267,11 @@ public class ResultFragment extends Fragment implements Observer {
 	private void setupMenu(View rootView) {
 		bar = (SeekBar)rootView.findViewById(R.id.result_seekbar_selector);
 		 seekbarText = (TextView)rootView.findViewById(R.id.result_progress_result);
+		if(planner != null)
 		 bar.setProgress(planner.getAnkomstIntervall());
-		 seekbarText.setText(""+bar.getProgress());
+		else 
+			bar.setProgress(10);
+		seekbarText.setText(""+bar.getProgress());
 		 CheckBox checkBox = (CheckBox)rootView.findViewById(R.id.result_only_fastest_stops);
 		 
 		 checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -284,47 +315,55 @@ public class ResultFragment extends Fragment implements Observer {
 	
 	private void SearchForTrips()
 	{
+		if(handler!=null)
+			handler.cancel(true);
+		startSearch();
 		
-		 handler= new PlanSearchHandler(progressBar,progressText){
+		handler = new PlanSearchHandler(progressBar, progressText) {
 			@Override
-			protected 
-			void onPostExecute(IResult result)
-			{
+			protected void onPostExecute(IResult result) {
 				try {
-					if(result != null){
-					adapter.clear();
-					List<Trip> trips;
-					
-					trips = result.getTrips(planner,AnkomstSammaTid.isChecked(),SnabbasteResväg.isChecked());
-					if(trips==null){
+					startListLoad();
+					if (result != null) {
 						adapter.clear();
+						List<Trip> trips;
+
+						
+						trips = result.getTrips(planner,
+								AnkomstSammaTid.isChecked(),
+								SnabbasteResväg.isChecked());
+						
+						if (trips == null) {
+							adapter.clear();
+							adapter.notifyDataSetChanged();
+							return;
+						}
+
+						if (trips.size() != 0)
+							Collections.sort(trips);
+						adapter.addAll(trips);
+						results = result;
 						adapter.notifyDataSetChanged();
-						return;
+						
+					} else {
+						Toast.makeText(getActivity(), "error",
+								Toast.LENGTH_LONG).show();
 					}
-					if(trips.size() != 0)
-						Collections.sort(trips);
-					adapter.addAll(trips);
-					results = result;
-					adapter.notifyDataSetChanged();
-					
-					
-					getActivity().findViewById(R.id.load).setVisibility(View.GONE);
-					loadingListViewLayout.setVisibility(View.GONE);
-					displayNoResults();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Toast.makeText(getActivity(), "error", Toast.LENGTH_LONG)
+							.show();
 				}
-				else 
+				finally
 				{
-					displayNoResults();
-					Toast.makeText(getActivity(), "error", Toast.LENGTH_LONG).show();
+					endSearch();
+					endListLoad();
 				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				displayNoResults();
-				Toast.makeText(getActivity(), "error", Toast.LENGTH_LONG).show();
-			}
 			}
 			
+
 		};
+
 		
 		handler.execute(planner);
 

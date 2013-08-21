@@ -9,7 +9,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.berka.multiplanner.APIKEY;
+import com.berka.multiplanner.StaticItems;
 import com.berka.multiplanner.Factories.Interface.IURL;
 import com.berka.multiplanner.Models.Trips.Location;
 import com.berka.multiplanner.Planner.Planner;
@@ -20,7 +20,7 @@ public class URLFactory implements IURL{
 
 	final String findLocationBaseUrl= "http://reseplanerare.resrobot.se/bin/ajax-getstop.exe/sny?L=vs_resrobot&REQ0JourneyStopsS0A=255&REQ0JourneyStopsB=12&S=";
 	public static final String searchUrl = "https://api.trafiklab.se/samtrafiken/resrobot/Search.json?" +
-			"apiVersion=2.1&coordSys=RT90" +"&key="+APIKEY.APIKEY;
+			"apiVersion=2.1&coordSys=RT90" +"&key="+StaticItems.APIKEY;
 	
 	
 	public HttpClient getClient() {

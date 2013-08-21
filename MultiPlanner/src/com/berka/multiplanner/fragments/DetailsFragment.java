@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.R.color;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -129,17 +130,15 @@ public boolean onChildClick(ExpandableListView parent, View v,
 			tripDialog.setTitle("RESA MED");
 			tripDialog.setContentView(R.layout.tripinfodialog);
 			
-			View includedView = tripDialog.findViewById(R.id.detail_popup_travelplan);
+			//View includedView = tripDialog.findViewById(R.id.detail_popup_travelplan);
 
-			LinearLayout lv = (LinearLayout)includedView.findViewById(R.id.row_background);
-			if(lv!= null)
-				lv.setBackgroundColor(Color.TRANSPARENT);
-			TextView restyp = (TextView)includedView.findViewById(R.id.child_restyp);
-			TextView linje = (TextView)includedView.findViewById(R.id.child_linje_id_real);
-			TextView from = (TextView)includedView.findViewById(R.id.child_from_place);
-			TextView to = (TextView)includedView.findViewById(R.id.child_to_place);
-			TextView fromTime = (TextView)includedView.findViewById(R.id.child_from_time);
-			TextView toTime = (TextView)includedView.findViewById(R.id.child_to_time);
+			
+			TextView restyp = (TextView)tripDialog.findViewById(R.id.child_restyp);
+			TextView linje = (TextView)tripDialog.findViewById(R.id.child_linje_id_real);
+			TextView from = (TextView)tripDialog.findViewById(R.id.child_from_place);
+			TextView to = (TextView)tripDialog.findViewById(R.id.child_to_place);
+			TextView fromTime = (TextView)tripDialog.findViewById(R.id.child_from_time);
+			TextView toTime = (TextView)tripDialog.findViewById(R.id.child_to_time);
 			TextView company = (TextView)tripDialog.findViewById(R.id.detail_popup_company_name);
 
 from.setText(s.getDeparture().getLocation()

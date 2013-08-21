@@ -19,11 +19,11 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.berka.multiplanner.APIKEY;
+import com.berka.multiplanner.StaticItems;
 
 public class CompanyImageFinder extends AsyncTask<Integer, Integer, Bitmap> {
 
-	private static final String requestUrl ="https://api.trafiklab.se/samtrafiken/resrobot/ProducerList.json?apiVersion=2.1&key="+APIKEY.APIKEY;
+	private static final String requestUrl ="https://api.trafiklab.se/samtrafiken/resrobot/ProducerList.json?apiVersion=2.1&key="+StaticItems.APIKEY;
 	@Override
 	protected Bitmap doInBackground(Integer... arg0) {
 		// TODO Auto-generated method stub
