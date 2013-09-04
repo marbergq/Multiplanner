@@ -341,7 +341,7 @@ public class SearchFragment extends Fragment implements Observer {
 			okbutton.setEnabled(false);
 			return;
 		}
-		if (containing > 1){
+		if (containing > 0){
 				okbutton.setEnabled(true);
 		}else okbutton.setEnabled(false);
 	}

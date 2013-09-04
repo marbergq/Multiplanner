@@ -89,7 +89,10 @@ public class ResultListViewUpdater extends AsyncTask<ListViewUpdaterModel, Integ
 				public void run(){
 					List<Trip> tripss;
 					try {
-						tripss = result.getTrips(param.getPlanner(), param.getOnlySelectedStops(),param.getOnlyFastest());
+						if(param.getPlanner().getFrom().size()==1)
+							tripss= result.getSingleTripsResult(param.getPlanner());
+						else
+							tripss = result.getTrips(param.getPlanner(), param.getOnlySelectedStops(),param.getOnlyFastest());
 					if(tripss==null)
 						return;
 					if(tripss.size() != 0)
@@ -134,7 +137,7 @@ public class ResultListViewUpdater extends AsyncTask<ListViewUpdaterModel, Integ
 		return new Thread(){
 			@Override
 			public void run(){
-				int maxTests = param.getPlanner().getFrom().size()*25;
+				int maxTests = param.getPlanner().getFrom().size()*100;
 				int testNr=0;
 				while(true)
 				{

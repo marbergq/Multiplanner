@@ -6,7 +6,12 @@
     android:layout_marginBottom="2dp"
     android:layout_marginTop="2dp"
     android:background="@drawable/gradientbackground_blue"
-    android:orientation="vertical" >
-<include layout="@layout/detail_group_reusablelayout"/>   
+    android:orientation="vertical"
+    android:paddingRight="5dp" >
+
+<include
+    layout="@layout/detail_group_reusablelayout"
+    android:paddingRight="5dp" />
+   
 </LinearLayout>
 

@@ -331,11 +331,16 @@ public class ResultFragment extends Fragment implements Observer {
 						adapter.clear();
 						List<Trip> trips;
 
-						
+						if(planner.getFrom().size()>1)
+						{
 						trips = result.getTrips(planner,
 								AnkomstSammaTid.isChecked(),
 								SnabbasteResväg.isChecked());
-						
+						}
+						else
+						{
+							trips = result.getSingleTripsResult(planner);
+						}
 						if (trips == null) {
 							adapter.clear();
 							adapter.notifyDataSetChanged();

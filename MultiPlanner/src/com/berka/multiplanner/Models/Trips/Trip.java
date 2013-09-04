@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -127,10 +128,15 @@ public class Trip implements Comparable<Trip>{
 		}
 	}
 	
-	public void addSegments(List<Segment> segments) {
+	public void addSegments(List<Segment> x) {
 		if(this.segments == null)
 			this.segments = new ArrayList<List<Segment>>();
-		this.segments.add(segments);
+		this.segments.add(x);
+	}
+	public void addAllSegments(Collection<List<Segment>> segmentsSegs)
+	{
+		for(List<Segment> x : segmentsSegs)
+			addSegments(x);
 	}
 	public String getTo() {
 		return segments.get(0).get(segments.get(0).size()-1).getArrival().getLocation().getDisplayname();

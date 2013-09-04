@@ -11,8 +11,7 @@ import com.berka.multiplanner.Models.Travel.Ttitem;
 public class FindLogic {
 
 	public static HashMap<String, List<List<Segment>>> getResult(List<Timetableresult> results) {
-		List<Segment> listOfSegments = new ArrayList<Segment>();
-		List<Segment> sameArrivalTime = new ArrayList<Segment>();
+
 
 		// TheBestOnes
 		HashMap<String, List<List<Segment>>> mapOfFirstOrderSegments = new HashMap<String, List<List<Segment>>>();
