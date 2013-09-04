@@ -5,9 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
-import com.berka.multiplanner.Models.Abstraction.AbstractStop;
+import android.content.Context;
+
+import com.berka.multiplanner.Helpers.FrequentlySearched;
 import com.berka.multiplanner.Models.Interface.ILocation;
-import com.berka.multiplanner.Models.Trips.Location;
 
 public class Planner extends Observable{
 	String testString;
@@ -61,14 +62,25 @@ public class Planner extends Observable{
 		hasChanged=false;
 	}
 	
-	public Planner()
+	private Planner()
 	{
 		Calendar c = Calendar.getInstance();
 		Year = c.get(Calendar.YEAR);
 		month = getMonth(c.get(Calendar.MONTH));
 		day = c.get(Calendar.DAY_OF_MONTH);
 		this.ankomstIntervall = 10;
+		
 	}
+	public Planner(Context context)
+	{
+		Calendar c = Calendar.getInstance();
+		Year = c.get(Calendar.YEAR);
+		month = getMonth(c.get(Calendar.MONTH));
+		day = c.get(Calendar.DAY_OF_MONTH);
+		this.ankomstIntervall = 10;
+		this.addObserver(FrequentlySearched.getInstance(context));
+	}
+	
 	private int getMonth(int month)
 	{
 		switch(month)
@@ -152,6 +164,8 @@ public class Planner extends Observable{
 			this.from = new LinkedList<ILocation>();
 		}
 		this.from.add(from);
+		setChanged();
+		notifyObservers(from);
 	}
 	public Boolean isOkToPlan()
 	{
@@ -173,12 +187,15 @@ public class Planner extends Observable{
 	}
 	public void setFrom(List<ILocation> from) {
 		this.from = from;
+		
 	}
 	public ILocation getTo() {
 		return to;
 	}
 	public void setTo(ILocation to) {
 		this.to = to;
+		setChanged();
+		notifyObservers(from);
 	}
 	
 	

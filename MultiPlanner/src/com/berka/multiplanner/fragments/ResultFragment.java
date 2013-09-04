@@ -375,8 +375,8 @@ public class ResultFragment extends Fragment implements Observer {
 	}
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		
-		setSeekbarValue((Integer)arg1);
+		if(arg1 instanceof Integer)
+			setSeekbarValue((Integer)arg1);
 		
 		
 	}

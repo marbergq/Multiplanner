@@ -179,7 +179,7 @@ public class SearchFragment extends Fragment implements Observer {
 		View rootView = inflater.inflate(R.layout.plannerfragment, container,
 				false);
 
-		plan = new Planner();
+		plan = new Planner(getActivity());
 		plan.addObserver(this);
 		SetupDropdown(rootView);
 		SetupOkButton(rootView);
@@ -466,16 +466,16 @@ public class SearchFragment extends Fragment implements Observer {
 				@Override
 				public void onClick(View v) {
 					try {
-						plan.addFrom(new Location(((Location) spinner.getSelectedItem()).getTheJSONBluePrint()));
+						plan.addFrom(new Location(((ILocation) spinner.getSelectedItem()).getTheJSONBluePrint()));
 					
 					dialog.dismiss();
-					textView.setText(((Location) spinner.getSelectedItem())
+					textView.setText(((ILocation) spinner.getSelectedItem())
 							.getDisplayname());
 					} catch (JSONException e) {try{
 						// TODO Auto-generated catch block
-						textView.setText(((Location) spinner.getSelectedItem())
+						textView.setText(((ILocation) spinner.getSelectedItem())
 								.getDisplayname());
-						plan.addFrom(new Stop(((Location) spinner.getSelectedItem()).getTheJSONBluePrint()));
+						plan.addFrom(new Stop(((ILocation) spinner.getSelectedItem()).getTheJSONBluePrint()));
 					}catch(JSONException ex)
 						{}
 					}
@@ -879,8 +879,8 @@ public class SearchFragment extends Fragment implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-
-		setSeekbarValue((Integer) arg1);
+		if(arg1 instanceof Integer)
+			setSeekbarValue((Integer) arg1);
 
 	}
 }

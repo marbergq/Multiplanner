@@ -1,8 +1,5 @@
 package com.berka.multiplanner.Network;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -13,16 +10,16 @@ import android.widget.ArrayAdapter;
 
 import com.berka.multiplanner.Factories.AbstractFactory;
 import com.berka.multiplanner.Factories.Interface.IURL;
-import com.berka.multiplanner.Models.Abstraction.AbstractStop;
+import com.berka.multiplanner.Helpers.FrequentlySearched;
+import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Models.Interface.IStops;
-import com.berka.multiplanner.Models.Trips.Location;
 
 public class AutoComplete extends AsyncTask<String, Integer, IStops> {
 	
 	HttpGet request;
 	Boolean run = false;
 	DefaultHttpClient client;
-	ArrayAdapter<AbstractStop> adapter;
+	ArrayAdapter<ILocation> adapter;
 	
 	public AutoComplete(){}
 	public AutoComplete(Adapter adapter)
@@ -43,9 +40,28 @@ public class AutoComplete extends AsyncTask<String, Integer, IStops> {
 
 
 	@Override
+	protected void onPreExecute()
+	{
+		try {
+		if(adapter==null)
+			return;
+		
+			//adapter.clear();
+			
+				adapter.addAll(FrequentlySearched.getInstance().getStops());
+			
+			adapter.notifyDataSetChanged();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	@Override
 	protected IStops doInBackground(String... arg0) {
 	
 		try {
+			
 		
 				client = (DefaultHttpClient) AbstractFactory.getIURLFactory().getClient();
 				request = (HttpGet) AbstractFactory.getIURLFactory().makeRequest(IURL.AUTOCOMPLETE, arg0);

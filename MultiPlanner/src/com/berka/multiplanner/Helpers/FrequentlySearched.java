@@ -1,6 +1,5 @@
 package com.berka.multiplanner.Helpers;
 
-import java.io.NotActiveException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Observable;
@@ -19,23 +18,30 @@ import com.berka.multiplanner.Helpers.Interface.ISaveTrips;
 import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Models.Trips.Location;
 
-public class FrequentlySearched implements Observer,ISaveTrips {
+public class FrequentlySearched implements ISaveTrips {
 
 	private final Context context;
-	public FrequentlySearched(Context context) {
+	private Set<ILocation> locations;
+	private static FrequentlySearched me = null;
+	
+	private FrequentlySearched(Context context) {
 		// TODO Auto-generated constructor stub
 		this.context=context;
 	}
+	
+	
+	
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		if(arg1 instanceof ILocation)
+			saveStop((ILocation)arg1);
 		
 	}
 
 	@Override
 	public void saveStop(final ILocation stop) {
-		Thread t = new Thread(){
+		new Thread(){
 			@Override
 			public void run()
 			{
@@ -44,32 +50,46 @@ public class FrequentlySearched implements Observer,ISaveTrips {
 				p.putString(stop.getLocationid().toString(), stop.getTheJSONBluePrint().toString());
 				p.commit();
 			}
-		};
+		}.start();
 		
 	}
 
 	@Override
 	public Set<ILocation> getStops() {
-		return null;
-//		final Set<ILocation> locations = new HashSet<ILocation>();
-//		Thread t = new Thread(){
-//			
-//		@Override public void run(){
-//			try {
-//			SharedPreferences  p = context.getSharedPreferences("SAVED", Activity.MODE_PRIVATE);
-//			Map<String,String> map = (Map<String,String>)p.getAll();
-//			
-//			for(String x : map.values())		
-//					locations.add(new Location(new JSONObject(x)));
-//			
-//		} catch (JSONException e) {
-//			
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-//	}
-//		return locations;
+		if(locations != null && locations.size() != 0) 
+			return locations;
+		
+		locations = new HashSet<ILocation>();
+			
+			try {
+			SharedPreferences  p = context.getSharedPreferences("SAVED", Activity.MODE_PRIVATE);
+			Map<String,String> map = (Map<String,String>)p.getAll();
+			
+			for(String x : map.values())		
+					locations.add(new Location(new JSONObject(x)));
+			
+		} catch (JSONException e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	
+		return locations;
 }
+
+
+
+
+	public static ISaveTrips getInstance(Context context) {
+		if(me==null)
+			me = new FrequentlySearched(context);
+		return me;	
+	}
+	public static ISaveTrips getInstance() throws Exception {
+		if(me==null)
+			throw new Exception("Not instanciated!");
+		return me;	
+	}
 }
 
