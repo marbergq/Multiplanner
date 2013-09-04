@@ -5,11 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
+import com.berka.multiplanner.Models.Abstraction.AbstractStop;
+import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Models.Trips.Location;
 
 public class Planner extends Observable{
 	String testString;
-	List<Location> from;
+	List<ILocation> from;
 	String arrivalTime;
 	int Year;
 	int day;
@@ -17,7 +19,7 @@ public class Planner extends Observable{
 	int hour;
 	int minute;
 	protected boolean hasChanged=false;
-	Location to;
+	ILocation to;
 	int ankomstIntervall;
 	
 	public int getAnkomstIntervall() {
@@ -143,11 +145,11 @@ public class Planner extends Observable{
 	public void setString(String string) {
 		testString = string;
 	}
-	public void addFrom(Location from)
+	public void addFrom(ILocation from)
 	{
 		if(this.from == null)
 		{
-			this.from = new LinkedList<Location>();
+			this.from = new LinkedList<ILocation>();
 		}
 		this.from.add(from);
 	}
@@ -157,25 +159,25 @@ public class Planner extends Observable{
 			return false;
 		return true;
 	}
-	public Boolean isThisFromAllreadyAdded(Location from)
+	public Boolean isThisFromAllreadyAdded(ILocation iLocation)
 	{
 		if(this.from == null || this.from.size() == 0)
 			return false;
-		for(Location x : this.from)
-			if(x.getLocationid() == from.getLocationid())
+		for(ILocation x : this.from)
+			if(x.getLocationid() == iLocation.getLocationid())
 				return true;
 		return false;
 	}
-	public List<Location> getFrom() {
+	public List<ILocation> getFrom() {
 		return from;
 	}
-	public void setFrom(List<Location> from) {
+	public void setFrom(List<ILocation> from) {
 		this.from = from;
 	}
-	public Location getTo() {
+	public ILocation getTo() {
 		return to;
 	}
-	public void setTo(Location to) {
+	public void setTo(ILocation to) {
 		this.to = to;
 	}
 	

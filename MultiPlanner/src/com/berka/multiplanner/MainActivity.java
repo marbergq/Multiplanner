@@ -20,8 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Models.Travel.Segment;
-import com.berka.multiplanner.Models.Trips.Location;
 import com.berka.multiplanner.Planner.Planner;
 import com.berka.multiplanner.fragments.DetailsFragment;
 import com.berka.multiplanner.fragments.ResultFragment;
@@ -57,7 +57,7 @@ public class MainActivity extends FragmentActivity {
 					.getPlanner();
 			if (p != null) {
 				LinkedList<String> list = new LinkedList<String>();
-				for (Location l : p.getFrom())
+				for (ILocation l : p.getFrom())
 					list.add(l.getTheJSONBluePrint().toString());
 				outState.putStringArray("FROM", (String[]) list.toArray());
 				list.clear();

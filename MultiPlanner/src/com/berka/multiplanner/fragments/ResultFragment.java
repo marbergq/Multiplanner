@@ -1,6 +1,5 @@
 package com.berka.multiplanner.fragments;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -35,11 +34,11 @@ import com.berka.multiplanner.MainActivity;
 import com.berka.multiplanner.Adapters.ListResultViewAdapter;
 import com.berka.multiplanner.Helpers.ResultListViewUpdater;
 import com.berka.multiplanner.Helpers.Interface.IResult;
-import com.berka.multiplanner.Helpers.Logic.MultipleResult;
 import com.berka.multiplanner.Models.ListViewUpdaterModel;
+import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Models.Travel.Segment;
-import com.berka.multiplanner.Models.Trips.Location;
 import com.berka.multiplanner.Models.Trips.Trip;
+import com.berka.multiplanner.Network.MultiPlannerAsyncTasks;
 import com.berka.multiplanner.Network.PlanSearchHandler;
 import com.berka.multiplanner.Planner.Planner;
 import com.groupalpha.berka.multiplanner.R;
@@ -99,7 +98,7 @@ public class ResultFragment extends Fragment implements Observer {
 		
 			fromTrips.clear();
 			
-			for(Location location : planner.getFrom())
+			for(ILocation location : planner.getFrom())
 			{	TextView view = new TextView(getActivity());
 				view.setText(location.getDisplayname().toUpperCase(Locale.ROOT));
 				view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -123,32 +122,36 @@ public class ResultFragment extends Fragment implements Observer {
 		if(asyncListViewUpdater != null)
 			asyncListViewUpdater.cancel(true);
 		
-		asyncListViewUpdater = new ResultListViewUpdater(results){
-			@Override
-			protected 
-			void onPostExecute(List<Trip> result){
-				
-				if(result != null){
-					
-				adapter.addAll(result);
-				adapter.notifyDataSetChanged();
-				
-				}else
-				{
-					Log.e("ListViewUpdater", "Was NUll");
-					
-				}
-				endListLoad();
-			}
-			
-			@Override
-			protected void onCancelled()
-			{
-
-			}
-		};
-		startListLoad();
-		asyncListViewUpdater.execute(new ListViewUpdaterModel(planner,AnkomstSammaTid.isChecked(),SnabbasteResväg.isChecked()));
+		MultiPlannerAsyncTasks.resultListViewUpdater(results, adapter,
+				new ListViewUpdaterModel(planner,AnkomstSammaTid.isChecked(),SnabbasteResväg.isChecked())
+					, noResultsView, loadingListViewWithContent);
+//		
+//		asyncListViewUpdater = new ResultListViewUpdater(results){
+//			@Override
+//			protected 
+//			void onPostExecute(List<Trip> result){
+//				
+//				if(result != null){
+//					
+//				adapter.addAll(result);
+//				adapter.notifyDataSetChanged();
+//				
+//				}else
+//				{
+//					Log.e("ListViewUpdater", "Was NUll");
+//					
+//				}
+//				endListLoad();
+//			}
+//			
+//			@Override
+//			protected void onCancelled()
+//			{
+//
+//			}
+//		};
+//		startListLoad();
+//		asyncListViewUpdater.execute(new ListViewUpdaterModel(planner,AnkomstSammaTid.isChecked(),SnabbasteResväg.isChecked()));
 		
 	}
 	
@@ -212,10 +215,10 @@ public class ResultFragment extends Fragment implements Observer {
 		
 		adapter = new ListResultViewAdapter(getActivity(),R.id.resultlist,new ArrayList<Trip>());
 		list.setAdapter(adapter);
-		list.setOnItemClickListener(new OnItemClickListener() {
 		
-			
-			
+		
+		list.setOnItemClickListener(new OnItemClickListener() {
+
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
@@ -259,20 +262,20 @@ public class ResultFragment extends Fragment implements Observer {
 				
 				updateListView();
 			}
-		});
-		
-		
+		});	
 	}
 	
 	private void setupMenu(View rootView) {
-		bar = (SeekBar)rootView.findViewById(R.id.result_seekbar_selector);
+		 bar = (SeekBar)rootView.findViewById(R.id.result_seekbar_selector);
 		 seekbarText = (TextView)rootView.findViewById(R.id.result_progress_result);
-		if(planner != null)
-		 bar.setProgress(planner.getAnkomstIntervall());
-		else 
+		
+		 if(planner != null)
+			 bar.setProgress(planner.getAnkomstIntervall());
+		 else 
 			bar.setProgress(10);
-		seekbarText.setText(""+bar.getProgress());
-		 CheckBox checkBox = (CheckBox)rootView.findViewById(R.id.result_only_fastest_stops);
+		
+		 seekbarText.setText(""+bar.getProgress());
+		CheckBox checkBox = (CheckBox)rootView.findViewById(R.id.result_only_fastest_stops);
 		 
 		 checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			

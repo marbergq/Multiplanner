@@ -13,7 +13,7 @@ import com.berka.multiplanner.Factories.Interface.IModel;
 import com.berka.multiplanner.Helpers.Interface.IResult;
 import com.berka.multiplanner.Helpers.Logic.FindLogic;
 import com.berka.multiplanner.Helpers.Logic.MultipleResult;
-import com.berka.multiplanner.Models.Interface.IStop;
+import com.berka.multiplanner.Models.Interface.IStops;
 import com.berka.multiplanner.Models.Travel.Timetableresult;
 import com.berka.multiplanner.Models.autocomplete.Suggestions;
 
@@ -27,7 +27,7 @@ public class ModelFactory implements IModel{
 				);
 	}
 	
-	public IStop createStopsFromResponse(HttpEntity entity) throws ParseException, JSONException, IOException
+	public IStops createStopsFromResponse(HttpEntity entity) throws ParseException, JSONException, IOException
 	{
 		
 		return new Suggestions(

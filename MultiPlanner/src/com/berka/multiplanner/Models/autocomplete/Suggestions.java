@@ -7,19 +7,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.berka.multiplanner.Models.Interface.IStop;
+import com.berka.multiplanner.Models.Abstraction.AbstractStop;
+import com.berka.multiplanner.Models.Interface.IStops;
 import com.berka.multiplanner.Models.Trips.Location;
 
-public class Suggestions implements IStop{
+public class Suggestions implements IStops{
 
-	List<Location> stops;
-	public List<Location> getStops() {
+	List<AbstractStop> stops;
+	public List<AbstractStop> getStops() {
 		return stops;
 	}
 	public Suggestions(String responseString) throws JSONException
 	{
 		
-	stops = new ArrayList<Location>();
+	stops = new ArrayList<AbstractStop>();
 		
 		
 			responseString=	responseString.replaceAll("SLs.sls=", "");
@@ -38,7 +39,7 @@ public class Suggestions implements IStop{
 		
 	}
 	public Suggestions(JSONObject object) {
-		stops = new ArrayList<Location>();
+		stops = new ArrayList<AbstractStop>();
 		
 		try{
 		

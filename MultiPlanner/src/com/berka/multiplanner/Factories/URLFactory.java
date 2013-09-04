@@ -11,7 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.berka.multiplanner.StaticItems;
 import com.berka.multiplanner.Factories.Interface.IURL;
-import com.berka.multiplanner.Models.Trips.Location;
+import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Planner.Planner;
 
 public class URLFactory implements IURL{
@@ -42,7 +42,7 @@ public class URLFactory implements IURL{
 		else if(requestType == SEARCH)
 		{
 			
-			Location location = (Location) parameters[0]; 
+			ILocation location = (ILocation) parameters[0]; 
 			
 			Planner plan = (Planner)((Planner[])parameters[1])[0];
 			String requestUrl = searchUrl

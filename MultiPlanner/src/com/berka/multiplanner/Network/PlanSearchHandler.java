@@ -6,14 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,8 +22,8 @@ import com.berka.multiplanner.Factories.AbstractFactory;
 import com.berka.multiplanner.Factories.Interface.IURL;
 import com.berka.multiplanner.Helpers.ExtendedEntityUtils;
 import com.berka.multiplanner.Helpers.Interface.IResult;
+import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Models.Travel.Timetableresult;
-import com.berka.multiplanner.Models.Trips.Location;
 import com.berka.multiplanner.Planner.Planner;
 
 public class PlanSearchHandler extends AsyncTask<Planner, Integer, IResult> {
@@ -62,11 +58,11 @@ public class PlanSearchHandler extends AsyncTask<Planner, Integer, IResult> {
 					.synchronizedList(result);
 
 			List<Thread> threadOfLists = new ArrayList<Thread>();
-			for (Location from : planner[0].getFrom())
+			for (ILocation from : planner[0].getFrom())
 				currentSearch.add(from.getDisplayname());
 			publishProgress(index);
 			
-			for (final Location from : planner[0].getFrom()) {
+			for (final ILocation from : planner[0].getFrom()) {
 
 				Thread t = new Thread() {
 					

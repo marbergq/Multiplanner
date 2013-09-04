@@ -47,11 +47,13 @@ import android.widget.Toast;
 
 import com.berka.multiplanner.MainActivity;
 import com.berka.multiplanner.Helpers.MyTimePicker24h;
-import com.berka.multiplanner.Models.Interface.IStop;
+import com.berka.multiplanner.Models.Abstraction.AbstractStop;
+import com.berka.multiplanner.Models.Interface.ILocation;
+import com.berka.multiplanner.Models.Interface.IStops;
 import com.berka.multiplanner.Models.Trips.Location;
 import com.berka.multiplanner.Models.autocomplete.Stop;
-import com.berka.multiplanner.Models.autocomplete.Suggestions;
 import com.berka.multiplanner.Network.AutoComplete;
+import com.berka.multiplanner.Network.MultiPlannerAsyncTasks;
 import com.berka.multiplanner.Planner.Planner;
 import com.groupalpha.berka.multiplanner.R;
 
@@ -132,7 +134,7 @@ public class SearchFragment extends Fragment implements Observer {
 		
 	}
 	
-	ArrayAdapter<Location> adapter;
+	ArrayAdapter<ILocation> adapter;
 	AutoComplete autocomp;
 	Planner plan;
 	Button okbutton;
@@ -444,8 +446,8 @@ public class SearchFragment extends Fragment implements Observer {
 	protected void displayMenadeDu() {
 
 		final Dialog dialog = new Dialog(getActivity());
-		final ArrayList<Location> results = new ArrayList<Location>();
-		final ArrayAdapter<Location> items = new ArrayAdapter<Location>(
+		final ArrayList<ILocation> results = new ArrayList<ILocation>();
+		final ArrayAdapter<ILocation> items = new ArrayAdapter<ILocation>(
 				getActivity(), android.R.layout.simple_spinner_dropdown_item);
 		
 		final Button button = new Button(getActivity());
@@ -495,9 +497,9 @@ public class SearchFragment extends Fragment implements Observer {
 							.getDisplayname());
 					} catch (JSONException e) {try{
 						// TODO Auto-generated catch block
-						textView.setText(((Location) spinner.getSelectedItem())
+						textView.setText(((ILocation) spinner.getSelectedItem())
 								.getDisplayname());
-						plan.setTo(new Stop(((Location) spinner.getSelectedItem()).getTheJSONBluePrint()));
+						plan.setTo(new Stop(((ILocation) spinner.getSelectedItem()).getTheJSONBluePrint()));
 					}catch(JSONException ex)
 						{}
 					}
@@ -512,7 +514,7 @@ public class SearchFragment extends Fragment implements Observer {
 		items.setNotifyOnChange(true);
 		autocomp = new AutoComplete() {
 			@Override
-			public void onPostExecute(IStop result) {
+			public void onPostExecute(IStops result) {
 				DisplayLoading(false);
 				if (result == null || (result.getStops() == null) || result.getStops().size()==0)
 					{
@@ -520,7 +522,7 @@ public class SearchFragment extends Fragment implements Observer {
 					textView.requestFocus();
 					Toast.makeText(getActivity(), "Hittade ingen station vid namn: "+textView.getText(), Toast.LENGTH_SHORT).show();
 					return;}
-				for (Location x : result.getStops()) {
+				for (ILocation x : result.getStops()) {
 					results.add(x);
 				}
 				items.addAll(results);
@@ -551,7 +553,7 @@ public class SearchFragment extends Fragment implements Observer {
 		if (plan.getFrom() == null)
 			return false;
 		else {
-			for (Location l : plan.getFrom()) {
+			for (ILocation l : plan.getFrom()) {
 				if (l.getDisplayname().equals(location))
 					return true;
 			}
@@ -606,16 +608,17 @@ public class SearchFragment extends Fragment implements Observer {
 	 * AsyncTaskHandler
 	 */
 	private void setupAsyncTask() {
-		autocomp = new AutoComplete() {
-			@Override
-			public void onPostExecute(IStop result) {
-				if (result == null || (result.getStops() == null) || result.getStops().size() == 0)
-					return;
-				adapter.clear();
-				adapter.addAll(result.getStops());
-				
-			}
-		};
+//		MultiPlannerAsyncTasks.autoComplete(adapter);
+//		autocomp = new AutoComplete() {
+//			@Override
+//			public void onPostExecute(IStop result) {
+//				if (result == null || (result.getStops() == null) || result.getStops().size() == 0)
+//					return;
+//				adapter.clear();
+//				adapter.addAll(result.getStops());
+//				
+//			}
+//		};
 	}
 
 	private void setupTextViewDropdowns(MultiAutoCompleteTextView view) {
@@ -661,28 +664,25 @@ public class SearchFragment extends Fragment implements Observer {
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 				if (plan.getFrom() != null)
-					for (Location l : plan.getFrom()) {
+					for (ILocation l : plan.getFrom()) {
 						if (l.getDisplayname().equals(s.toString())) {
 							plan.getFrom().remove(l);
 							break;
 						}
 					}
+				
 
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				for (int i = 0; i < adapter.getCount(); i++)
-					if (adapter.getItem(i).getDisplayname()
-							.equals(s.toString()))
-						return;
-				if (s.length() > 3) {
-					cancelAsyncTask();
-					setupAsyncTask();
-					autocomp.execute(s.toString());
-				}
-				
+//				for (int i = 0; i < adapter.getCount(); i++)
+//					if (adapter.getItem(i).getDisplayname()
+//							.equals(s.toString()))
+//						return;
+					
+				MultiPlannerAsyncTasks.autoComplete(adapter, s.toString());
 				Runnable r= new Runnable() {
 					
 					@Override
@@ -704,10 +704,10 @@ public class SearchFragment extends Fragment implements Observer {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (((Location) parent.getItemAtPosition(position))
+				if (((ILocation) parent.getItemAtPosition(position))
 						.getLocationid().intValue() == -1)
 					return;
-				if (!plan.isThisFromAllreadyAdded(((Location) parent
+				if (!plan.isThisFromAllreadyAdded(((ILocation) parent
 						.getItemAtPosition(position)))) {
 					plan.addFrom(adapter.getItem(position));
 
@@ -724,7 +724,7 @@ public class SearchFragment extends Fragment implements Observer {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				plan.setTo(((Location) parent.getItemAtPosition(position)));
+				plan.setTo(((ILocation) parent.getItemAtPosition(position)));
 
 				enableButton();
 			}
@@ -756,7 +756,7 @@ public class SearchFragment extends Fragment implements Observer {
 	}
 	
 	private void SetupDropdown(View rootView) {
-		adapter = new ArrayAdapter<Location>(getActivity(),
+		adapter = new ArrayAdapter<ILocation>(getActivity(),
 				android.R.layout.simple_dropdown_item_1line){
 			
 		}

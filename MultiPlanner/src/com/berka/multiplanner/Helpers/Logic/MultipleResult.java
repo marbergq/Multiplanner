@@ -16,6 +16,7 @@ import android.util.Pair;
 
 import com.berka.multiplanner.Helpers.TimeFilter;
 import com.berka.multiplanner.Helpers.Interface.IResult;
+import com.berka.multiplanner.Models.Interface.ILocation;
 import com.berka.multiplanner.Models.Travel.Mot;
 import com.berka.multiplanner.Models.Travel.Segment;
 import com.berka.multiplanner.Models.Travel.SegmentId;
@@ -33,33 +34,33 @@ public class MultipleResult implements IResult {
 	
 	static class SearchForAllLocations
 	{
-		public List<Pair<Location,Boolean>> from;
+		public List<Pair<ILocation,Boolean>> from;
 		
-		public void init(List<Location> from)
+		public void init(List<ILocation> from)
 		{
-			this.from = new ArrayList<Pair<Location,Boolean>>();
+			this.from = new ArrayList<Pair<ILocation,Boolean>>();
 			
-			for(Location l : from)
+			for(ILocation l : from)
 			{
-				this.from.add(new Pair<Location, Boolean>(l, false));
+				this.from.add(new Pair<ILocation, Boolean>(l, false));
 			}
 		}
 		
 		public Boolean AllFromIncluded()
 		{
-			for(Pair<Location, Boolean> p : this.from)
+			for(Pair<ILocation, Boolean> p : this.from)
 				if(p.second == false)
 					return false;
 			return true;
 		}
 		
-		public void foundLocation(Location loc)
+		public void foundLocation(ILocation loc)
 		{
-			List<Pair<Location,Boolean>> temp = new ArrayList<Pair<Location,Boolean>>();
+			List<Pair<ILocation,Boolean>> temp = new ArrayList<Pair<ILocation,Boolean>>();
 			for(int i = 0 ; i < this.from.size(); i++)
 			{
 				if(from.get(i).first.getLocationid().intValue() == loc.getLocationid().intValue()){
-					 Pair<Location, Boolean> p =new Pair<Location, Boolean>(from.get(i).first, true);
+					 Pair<ILocation, Boolean> p =new Pair<ILocation, Boolean>(from.get(i).first, true);
 					 temp.add(p);
 				}
 				else
@@ -87,7 +88,7 @@ public class MultipleResult implements IResult {
 		for(List<Segment> seg : segs){
 			
 			
-		Location locatid = seg.get(0).getDeparture().getLocation();
+		ILocation locatid = seg.get(0).getDeparture().getLocation();
 		allLoc.foundLocation(locatid);
 		}
 		return allLoc.AllFromIncluded();
@@ -108,7 +109,7 @@ public class MultipleResult implements IResult {
 			if(Thread.currentThread().isInterrupted())
 				return null;
 			Trip newTrip = new Trip();
-			for(Location l : planner.getFrom())
+			for(ILocation l : planner.getFrom())
 			{
 				if(Thread.currentThread().isInterrupted())
 					return null;
@@ -134,7 +135,7 @@ public class MultipleResult implements IResult {
 
 	}
 	
-	private List<Segment> filterOutAllbutTheShortest(Location l, Trip trip) {
+	private List<Segment> filterOutAllbutTheShortest(ILocation l, Trip trip) {
 
 		Calendar candidateTime = null;
 

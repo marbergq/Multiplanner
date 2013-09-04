@@ -30,18 +30,17 @@ public final class R {
     public static final class drawable {
         public static final int background_selector=0x7f020000;
         public static final int dark_header=0x7f020001;
-        public static final int dsadsds=0x7f020002;
-        public static final int gradientbackground_blue=0x7f020003;
-        public static final int gradientbackground_blue_white_blue=0x7f020004;
-        public static final int gradientbackground_blue_white_blue_selected=0x7f020005;
-        public static final int gradientbackground_green=0x7f020006;
-        public static final int ic_launcher=0x7f020007;
-        public static final int ic_menu_share=0x7f020008;
-        public static final int ic_menu_share_holo_dark=0x7f020009;
-        public static final int ic_menu_share_holo_light=0x7f02000a;
-        public static final int list_selector_pressed_holo_light=0x7f02000b;
-        public static final int listdivider=0x7f02000c;
-        public static final int logo=0x7f02000d;
+        public static final int gradientbackground_blue=0x7f020002;
+        public static final int gradientbackground_blue_white_blue=0x7f020003;
+        public static final int gradientbackground_blue_white_blue_selected=0x7f020004;
+        public static final int gradientbackground_green=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int ic_menu_share=0x7f020007;
+        public static final int ic_menu_share_holo_dark=0x7f020008;
+        public static final int ic_menu_share_holo_light=0x7f020009;
+        public static final int list_selector_pressed_holo_light=0x7f02000a;
+        public static final int listdivider=0x7f02000b;
+        public static final int logo=0x7f02000c;
     }
     public static final class id {
         public static final int ImageView01=0x7f090043;
