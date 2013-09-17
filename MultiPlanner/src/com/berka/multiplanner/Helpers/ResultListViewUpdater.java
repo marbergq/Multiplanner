@@ -137,7 +137,7 @@ public class ResultListViewUpdater extends AsyncTask<ListViewUpdaterModel, Integ
 		return new Thread(){
 			@Override
 			public void run(){
-				int maxTests = param.getPlanner().getFrom().size()*100;
+				int maxTests = param.getPlanner().getFrom().size()*30;
 				int testNr=0;
 				while(true)
 				{
