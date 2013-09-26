@@ -78,7 +78,7 @@ public class Planner extends Observable{
 		month = getMonth(c.get(Calendar.MONTH));
 		day = c.get(Calendar.DAY_OF_MONTH);
 		this.ankomstIntervall = 10;
-		this.addObserver(FrequentlySearched.getInstance(context));
+		//this.addObserver(FrequentlySearched.getInstance(context));
 	}
 	
 	private int getMonth(int month)

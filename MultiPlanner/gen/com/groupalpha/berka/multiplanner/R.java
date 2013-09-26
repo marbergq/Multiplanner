@@ -41,6 +41,7 @@ public final class R {
         public static final int list_selector_pressed_holo_light=0x7f02000a;
         public static final int listdivider=0x7f02000b;
         public static final int logo=0x7f02000c;
+        public static final int vasttrafik=0x7f02000d;
     }
     public static final class id {
         public static final int ImageView01=0x7f090043;

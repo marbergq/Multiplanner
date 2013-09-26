@@ -127,7 +127,7 @@ public boolean onChildClick(ExpandableListView parent, View v,
 		if(s.getSegmentid().getCarrier() != null)
 		{
 			final Dialog tripDialog = new Dialog(getActivity());
-			tripDialog.setTitle("RESA MED");
+			tripDialog.setTitle("RESA MED "+ s.getSegmentid().getCarrier().getName());
 			tripDialog.setContentView(R.layout.tripinfodialog);
 			
 			//View includedView = tripDialog.findViewById(R.id.detail_popup_travelplan);
@@ -139,7 +139,7 @@ public boolean onChildClick(ExpandableListView parent, View v,
 			TextView to = (TextView)tripDialog.findViewById(R.id.child_to_place);
 			TextView fromTime = (TextView)tripDialog.findViewById(R.id.child_from_time);
 			TextView toTime = (TextView)tripDialog.findViewById(R.id.child_to_time);
-			TextView company = (TextView)tripDialog.findViewById(R.id.detail_popup_company_name);
+//			TextView company = (TextView)tripDialog.findViewById(R.id.detail_popup_company_name);
 
 from.setText(s.getDeparture().getLocation()
 			.getDisplayname());
@@ -152,26 +152,26 @@ linje.setText(s.getSegmentid().getMot().getText()
 			+ " "
 			+ s.getSegmentid().getCarrier().getNumber()
 					.intValue());
-company.setText(s.getSegmentid().getCarrier().getName());
-			
-			
-			final ImageView companyImage = (ImageView)tripDialog.findViewById(R.id.detail_popup_company_image);
-			
-			CompanyImageFinder finder = new CompanyImageFinder(){
 
-				@Override
-				protected void onPostExecute(Bitmap result) {
-					Log.d("result!", "");
-					if(result != null)
-					{
-						Log.d("RESULT", "NOT NULL!");
-						companyImage.setImageBitmap(result);
-					}else
-						Log.d("RESULT", "NULL!");
-				}
-				
-			};
-			finder.execute(s.getSegmentid().getCarrier().getId().intValue());
+			
+			
+//			final ImageView companyImage = (ImageView)tripDialog.findViewById(R.id.detail_popup_company_image);
+//			
+//			CompanyImageFinder finder = new CompanyImageFinder(){
+//
+//				@Override
+//				protected void onPostExecute(Bitmap result) {
+//					Log.d("result!", "");
+//					if(result != null)
+//					{
+//						Log.d("RESULT", "NOT NULL!");
+//						companyImage.setImageBitmap(result);
+//					}else
+//						Log.d("RESULT", "NULL!");
+//				}
+//				
+//			};
+//			finder.execute(s.getSegmentid().getCarrier().getId().intValue());
 			
 			
 			Button buttonNo = (Button) tripDialog.findViewById(R.id.detail_popup_button_cancel);

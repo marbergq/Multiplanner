@@ -3,6 +3,7 @@ package com.berka.multiplanner.Helpers;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TimePicker;
+import android.widget.TimePicker.OnTimeChangedListener;
 
 public class MyTimePicker24h extends TimePicker {
 
@@ -25,8 +26,11 @@ public class MyTimePicker24h extends TimePicker {
 	}
 	
 	
+
+
 	private void init()
 	{
 		setIs24HourView(true);
+		
 	}
 }

@@ -8,32 +8,20 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="5dp" >
+        android:layout_gravity="left"
+        android:layout_marginBottom="5dp"
+        android:paddingLeft="10dp" >
 
-        <ImageView
-            android:id="@+id/detail_popup_company_image"
+        <TextView
+            android:id="@+id/detail_popup_company_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:adjustViewBounds="false"
-            android:cropToPadding="false"
-            android:maxHeight="150dp"
-            android:maxWidth="150dp"
-            android:minHeight="50dp"
-            android:minWidth="50dp"
-            android:scaleType="centerInside"
-            android:src="@null" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="FÖRETAGSNAMN"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/detail_popup_company_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="FÖRETAGSNAMN"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,6 +50,18 @@
                 android:layout_height="wrap_content"
                 android:text="ID"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ImageView
+                android:id="@+id/detail_popup_company_image"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="false"
+                android:cropToPadding="false"
+                android:maxHeight="20dp"
+                android:maxWidth="200dp"
+                android:scaleType="fitCenter"
+                android:src="@null" />
+
         </LinearLayout>
 
         <LinearLayout

@@ -2,6 +2,8 @@ package com.berka.multiplanner.fragments;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -58,82 +60,88 @@ import com.berka.multiplanner.Planner.Planner;
 import com.groupalpha.berka.multiplanner.R;
 
 public class SearchFragment extends Fragment implements Observer {
-	
-	private static final String SharedPrefsName="MULTIPLANNERPREFS";
-	private static final String PURCHACED_KEY ="PURCHASE";
-	private static final String FIRST_START ="FIRST";
+
+	private static final String SharedPrefsName = "MULTIPLANNERPREFS";
+	private static final String PURCHACED_KEY = "PURCHASE";
+	private static final String FIRST_START = "FIRST";
 	int maximumSearchAllowed = 2;
+
 	/**
 	 * IS THIS THE FIRST START?
+	 * 
 	 * @return
 	 */
-	private Boolean isFirstStart()
-	{
-		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
+	private Boolean isFirstStart() {
+		SharedPreferences settings = getActivity().getSharedPreferences(
+				SharedPrefsName, 0);
 		return settings.getBoolean(FIRST_START, true);
 	}
-	
+
 	/**
-	 * TO RUN IF THIS IS THE 
+	 * TO RUN IF THIS IS THE
 	 */
-	private void initialStart()
-	{
-		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
+	private void initialStart() {
+		SharedPreferences settings = getActivity().getSharedPreferences(
+				SharedPrefsName, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean("PURCHASE", false);
 		editor.commit();
 	}
-	
-	private boolean hasPurchaced()
-	{
+
+	private boolean hasPurchaced() {
 		return true;
-//		SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
-//		if(settings.getBoolean(PURCHACED_KEY, false))
-//		{
-//			maximumSearchAllowed=4;
-//			return true;
-//		}else
-//			return false;
+		// SharedPreferences settings =
+		// getActivity().getSharedPreferences(SharedPrefsName, 0);
+		// if(settings.getBoolean(PURCHACED_KEY, false))
+		// {
+		// maximumSearchAllowed=4;
+		// return true;
+		// }else
+		// return false;
 	}
-	
+
 	/**
 	 * SETUP INAPP BILLING (GET PEOPLE TO PAY FOR THE SERVICE)
 	 */
-	public void setupInAppBilling(final Planner planner)
-	{
+	public void setupInAppBilling(final Planner planner) {
 		AlertDialog d = new AlertDialog.Builder(getActivity()).create();
 		d.setMessage("KÖPA APP?");
 		d.setTitle("APPLIKATION INTE KÖPT!");
-		
-		d.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				Toast.makeText(getActivity(), "KÖPTE INTE!", Toast.LENGTH_LONG).show();
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-	d.setButton(DialogInterface.BUTTON_POSITIVE, "BUY", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				SharedPreferences settings = getActivity().getSharedPreferences(SharedPrefsName, 0);
-				SharedPreferences.Editor editor = settings.edit();
-				editor.putBoolean("PURCHASE", true);
-				editor.commit();
-				Toast.makeText(getActivity(), "KÖPT!", Toast.LENGTH_LONG).show();
-			
-				MainActivity act = (MainActivity) getActivity();
-				act.getAdapter().ShowResults(planner);
-			}
-		});		
 
-	d.show();
-		
+		d.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(getActivity(), "KÖPTE INTE!",
+								Toast.LENGTH_LONG).show();
+						// TODO Auto-generated method stub
+
+					}
+				});
+
+		d.setButton(DialogInterface.BUTTON_POSITIVE, "BUY",
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SharedPreferences settings = getActivity()
+								.getSharedPreferences(SharedPrefsName, 0);
+						SharedPreferences.Editor editor = settings.edit();
+						editor.putBoolean("PURCHASE", true);
+						editor.commit();
+						Toast.makeText(getActivity(), "KÖPT!",
+								Toast.LENGTH_LONG).show();
+
+						MainActivity act = (MainActivity) getActivity();
+						act.getAdapter().ShowResults(planner);
+					}
+				});
+
+		d.show();
+
 	}
-	
+
 	ArrayAdapter<ILocation> adapter;
 	AutoComplete autocomp;
 	Planner plan;
@@ -154,8 +162,6 @@ public class SearchFragment extends Fragment implements Observer {
 			rootView.findViewById(R.id.planner_loading).setVisibility(
 					View.VISIBLE);
 	}
-	
-	
 
 	@Override
 	public void onPause() {
@@ -167,9 +173,8 @@ public class SearchFragment extends Fragment implements Observer {
 	public void onResume() {
 		super.onResume();
 	}
-	
-	public Planner getPlanner()
-	{
+
+	public Planner getPlanner() {
 		return plan;
 	}
 
@@ -194,44 +199,43 @@ public class SearchFragment extends Fragment implements Observer {
 		return rootView;
 
 	}
-	
-	private void addFromMultTextView(final View root)
-	{
-		Button button =(Button)root.findViewById(R.id.search_add_from);
+
+	private void addFromMultTextView(final View root) {
+		Button button = (Button) root.findViewById(R.id.search_add_from);
 		button.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				
-			
-				if(textViews.size()<8){
-					LinearLayout scroll = (LinearLayout)root.findViewById(R.id.fromlayout);
-					scroll.addView(createNewMultiCompleteTextView(),scroll.indexOfChild(textViews.get(textViews.size()-2) )+1 );
-				}
-				else
-					Toast.makeText(getActivity(), "Maximaltantal resande är : 8", Toast.LENGTH_SHORT).show();
+
+				if (textViews.size() < 8) {
+					LinearLayout scroll = (LinearLayout) root
+							.findViewById(R.id.fromlayout);
+					scroll.addView(
+							createNewMultiCompleteTextView(),
+							scroll.indexOfChild(textViews.get(textViews.size() - 2)) + 1);
+				} else
+					Toast.makeText(getActivity(),
+							"Maximaltantal resande är : 8", Toast.LENGTH_SHORT)
+							.show();
 			}
 		});
 	}
-	
-	
+
 	private void setupScrollView(View root) {
 		// TODO Auto-generated method stub
-		scrollView =(ScrollView) root.findViewById(R.id.scrollView1);
-		
+		scrollView = (ScrollView) root.findViewById(R.id.scrollView1);
+
 	}
 
-	private void ScrollToView(View viewToScrollTo)
-	{
-	
-		float getY=viewToScrollTo.getY();
+	private void ScrollToView(View viewToScrollTo) {
+
+		float getY = viewToScrollTo.getY();
 		float height = viewToScrollTo.getHeight();
-		float y = getY-height;
-		if(y < 0)
-			y=viewToScrollTo.getY();
-		scrollView.smoothScrollTo((int)viewToScrollTo.getX(), (int)y);
+		float y = getY - height;
+		if (y < 0)
+			y = viewToScrollTo.getY();
+		scrollView.smoothScrollTo((int) viewToScrollTo.getX(), (int) y);
 	}
-
 
 	private void setupProgressSelector(View rootView) {
 		seek = (SeekBar) rootView.findViewById(R.id.search_progress_selector);
@@ -263,8 +267,6 @@ public class SearchFragment extends Fragment implements Observer {
 				plan.setAnkomstIntervall(progress);
 			}
 		});
-		
-	
 
 	}
 
@@ -276,37 +278,56 @@ public class SearchFragment extends Fragment implements Observer {
 	private void setupSearchDatumButton(View rootView) {
 		final Calendar c = Calendar.getInstance();
 		final Button button = (Button) rootView.findViewById(R.id.Search_datum);
-		
-		
-			button.setText(plan.getDateString());
-			button.setOnClickListener(new OnClickListener() {
-	
-				@Override
-				public void onClick(View v) { 
-					// TODO Auto-generated method stub
-	
+
+		button.setText(plan.getDateString());
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+						new OnDateSetListener() {
+
+							@Override
+							public void onDateSet(DatePicker view, int year,
+									int monthOfYear, int dayOfMonth) {
+								// TODO Auto-generated method stub
+								
+								plan.setYear(year);
+								plan.setDay(dayOfMonth);
+								plan.setMonth(getMonth(monthOfYear));
+								button.setText(plan.getDateString());
+								Log.d("DateSet", plan.getDateString());
+							}
+						}, plan.getYear(), plan.getMonth() - 1, plan.getDay())
+				{
+
+					@Override
+					public void onDateChanged (final DatePicker view, int year, int month, int day){
+					    Calendar cal = Calendar.getInstance();
+					    cal.set(year, month, day);
+					    
+					    final Calendar resetCal = Calendar.getInstance(); 
+					    GregorianCalendar now = new GregorianCalendar();
+					    now.set(Calendar.YEAR, resetCal.get(Calendar.YEAR));
+					    now.set(Calendar.MONTH, resetCal.get(Calendar.MONTH));
+					    now.set(Calendar.DAY_OF_MONTH, resetCal.get(Calendar.DAY_OF_MONTH));
+						
+						   
+					    if(cal.before(now) ){
+					        view.updateDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));    
+					}
 					
-					DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-							new OnDateSetListener() {
-	
-								@Override
-								public void onDateSet(DatePicker view, int year,
-										int monthOfYear, int dayOfMonth) {
-									// TODO Auto-generated method stub
-									plan.setYear(year);
-									plan.setDay(dayOfMonth);
-									plan.setMonth(getMonth(monthOfYear));
-									button.setText(plan.getDateString());
-									Log.d("DateSet", plan.getDateString());
-								}
-							}, plan.getYear(), plan.getMonth()-1, plan.getDay());
-					dialog.show();
-					
-	
-				}
-	
-			});
-		
+					}
+				};
+				
+				dialog.show();
+
+			}
+
+		});
+
 	}
 
 	private int getMonth(int month) {
@@ -337,23 +358,21 @@ public class SearchFragment extends Fragment implements Observer {
 			if (!view.getText().toString().isEmpty())
 				containing++;
 		}
-		if(autoTo.getText().toString().isEmpty()){
+		if (autoTo.getText().toString().isEmpty()) {
 			okbutton.setEnabled(false);
 			return;
 		}
-		if (containing > 0){
-				okbutton.setEnabled(true);
-		}else okbutton.setEnabled(false);
+		if (containing > 0) {
+			okbutton.setEnabled(true);
+		} else
+			okbutton.setEnabled(false);
 	}
 
 	private void goToResultFragment(Planner planner) {
 		Boolean hasBought = hasPurchaced();
-		if(!hasBought && plan.getFrom().size() > maximumSearchAllowed)
-		{
+		if (!hasBought && plan.getFrom().size() > maximumSearchAllowed) {
 			setupInAppBilling(planner);
-		}
-		else
-		{
+		} else {
 			MainActivity act = (MainActivity) getActivity();
 			act.getAdapter().ShowResults(planner);
 		}
@@ -374,18 +393,17 @@ public class SearchFragment extends Fragment implements Observer {
 			}
 
 		});
-		
-
 
 	}
 
 	private MyTimePicker24h setupTimePicker(View viewRoot) {
 		final MyTimePicker24h time = (MyTimePicker24h) viewRoot
 				.findViewById(R.id.toTimePicker);
-		Calendar c= Calendar.getInstance();
+		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MINUTE, 10);
 		time.setCurrentHour(c.get(Calendar.HOUR_OF_DAY));
 		time.setCurrentMinute(c.get(Calendar.MINUTE));
+		
 		return time;
 	}
 
@@ -395,11 +413,10 @@ public class SearchFragment extends Fragment implements Observer {
 			plan.setMinute(time.getCurrentMinute());
 
 		}
-		
-		
-		
-		if(plan.getTo()==null || !plan.getTo().getDisplayname().equals(autoTo.getText().toString()))
-		{
+
+		if (plan.getTo() == null
+				|| !plan.getTo().getDisplayname()
+						.equals(autoTo.getText().toString())) {
 			displayMenadeDu();
 			return;
 		}
@@ -408,12 +425,13 @@ public class SearchFragment extends Fragment implements Observer {
 		else if (plannerSameSizeAsTextViews() == 1) {
 			displayMenadeDu();
 		}
-		
-		
+
 	}
 
 	private MultiAutoCompleteTextView getTextWithoutPlan() {
-		if(plan.getTo()==null || !plan.getTo().getDisplayname().equals(autoTo.getText().toString()))
+		if (plan.getTo() == null
+				|| !plan.getTo().getDisplayname()
+						.equals(autoTo.getText().toString()))
 			return autoTo;
 		if (plan.getFrom() == null)
 			return textViews.get(0);
@@ -438,7 +456,7 @@ public class SearchFragment extends Fragment implements Observer {
 
 			}
 		}
-	
+
 		return null;
 
 	}
@@ -449,7 +467,7 @@ public class SearchFragment extends Fragment implements Observer {
 		final ArrayList<ILocation> results = new ArrayList<ILocation>();
 		final ArrayAdapter<ILocation> items = new ArrayAdapter<ILocation>(
 				getActivity(), android.R.layout.simple_spinner_dropdown_item);
-		
+
 		final Button button = new Button(getActivity());
 		button.setText("OK");
 		final Spinner spinner = new Spinner(getActivity());
@@ -460,55 +478,60 @@ public class SearchFragment extends Fragment implements Observer {
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		if(textView != autoTo)
+		if (textView != autoTo)
 			button.setOnClickListener(new OnClickListener() {
-	
+
 				@Override
 				public void onClick(View v) {
 					try {
-						plan.addFrom(new Location(((ILocation) spinner.getSelectedItem()).getTheJSONBluePrint()));
-					
-					dialog.dismiss();
-					textView.setText(((ILocation) spinner.getSelectedItem())
-							.getDisplayname());
-					} catch (JSONException e) {try{
-						// TODO Auto-generated catch block
+						plan.addFrom(new Location(((ILocation) spinner
+								.getSelectedItem()).getTheJSONBluePrint()));
+
+						dialog.dismiss();
 						textView.setText(((ILocation) spinner.getSelectedItem())
 								.getDisplayname());
-						plan.addFrom(new Stop(((ILocation) spinner.getSelectedItem()).getTheJSONBluePrint()));
-					}catch(JSONException ex)
-						{}
+					} catch (JSONException e) {
+						try {
+							// TODO Auto-generated catch block
+							textView.setText(((ILocation) spinner
+									.getSelectedItem()).getDisplayname());
+							plan.addFrom(new Stop(((ILocation) spinner
+									.getSelectedItem()).getTheJSONBluePrint()));
+						} catch (JSONException ex) {
+						}
 					}
 					dialog.dismiss();
 					onOkButtonClick(null);
-	
+
 				}
 			});
 		else
 			button.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					try {
-						plan.setTo(new Location(((Location) spinner.getSelectedItem()).getTheJSONBluePrint()));
-					
-					dialog.dismiss();
-					textView.setText(((Location) spinner.getSelectedItem())
-							.getDisplayname());
-					} catch (JSONException e) {try{
-						// TODO Auto-generated catch block
+						plan.setTo(((ILocation) spinner
+								.getSelectedItem()));
+
+						dialog.dismiss();
 						textView.setText(((ILocation) spinner.getSelectedItem())
 								.getDisplayname());
-						plan.setTo(new Stop(((ILocation) spinner.getSelectedItem()).getTheJSONBluePrint()));
-					}catch(JSONException ex)
-						{}
+					} catch (JSONException e) {
+						try {
+							// TODO Auto-generated catch block
+							textView.setText(((ILocation) spinner
+									.getSelectedItem()).getDisplayname());
+							plan.setTo((ILocation) spinner
+									.getSelectedItem()));
+						} catch (JSONException ex) {
+						}
 					}
 					dialog.dismiss();
 					onOkButtonClick(null);
-	
+
 				}
-					
-				
+
 			});
 
 		items.setNotifyOnChange(true);
@@ -516,12 +539,17 @@ public class SearchFragment extends Fragment implements Observer {
 			@Override
 			public void onPostExecute(IStops result) {
 				DisplayLoading(false);
-				if (result == null || (result.getStops() == null) || result.getStops().size()==0)
-					{
+				if (result == null || (result.getStops() == null)
+						|| result.getStops().size() == 0) {
 					textView.setSelection(0, textView.getText().length());
 					textView.requestFocus();
-					Toast.makeText(getActivity(), "Hittade ingen station vid namn: "+textView.getText(), Toast.LENGTH_SHORT).show();
-					return;}
+					Toast.makeText(
+							getActivity(),
+							"Hittade ingen station vid namn: "
+									+ textView.getText(), Toast.LENGTH_SHORT)
+							.show();
+					return;
+				}
 				for (ILocation x : result.getStops()) {
 					results.add(x);
 				}
@@ -532,8 +560,9 @@ public class SearchFragment extends Fragment implements Observer {
 		};
 		if (textView != null) {
 			autocomp.execute(textView.getText().toString());
-			dialog.setTitle(getActivity().getString(R.string.Did_you_mean)+textView.getText().toString());
-			
+			dialog.setTitle(getActivity().getString(R.string.Did_you_mean)
+					+ textView.getText().toString());
+
 			DisplayLoading(true);
 
 			spinner.setAdapter(items);
@@ -608,17 +637,18 @@ public class SearchFragment extends Fragment implements Observer {
 	 * AsyncTaskHandler
 	 */
 	private void setupAsyncTask() {
-//		MultiPlannerAsyncTasks.autoComplete(adapter);
-//		autocomp = new AutoComplete() {
-//			@Override
-//			public void onPostExecute(IStop result) {
-//				if (result == null || (result.getStops() == null) || result.getStops().size() == 0)
-//					return;
-//				adapter.clear();
-//				adapter.addAll(result.getStops());
-//				
-//			}
-//		};
+		// MultiPlannerAsyncTasks.autoComplete(adapter);
+		// autocomp = new AutoComplete() {
+		// @Override
+		// public void onPostExecute(IStop result) {
+		// if (result == null || (result.getStops() == null) ||
+		// result.getStops().size() == 0)
+		// return;
+		// adapter.clear();
+		// adapter.addAll(result.getStops());
+		//
+		// }
+		// };
 	}
 
 	private void setupTextViewDropdowns(MultiAutoCompleteTextView view) {
@@ -670,31 +700,29 @@ public class SearchFragment extends Fragment implements Observer {
 							break;
 						}
 					}
-				
 
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-//				for (int i = 0; i < adapter.getCount(); i++)
-//					if (adapter.getItem(i).getDisplayname()
-//							.equals(s.toString()))
-//						return;
-					
+				// for (int i = 0; i < adapter.getCount(); i++)
+				// if (adapter.getItem(i).getDisplayname()
+				// .equals(s.toString()))
+				// return;
+
 				MultiPlannerAsyncTasks.autoComplete(adapter, s.toString());
-				Runnable r= new Runnable() {
-					
+				Runnable r = new Runnable() {
+
 					@Override
 					public void run() {
 						enableButton();
-						
+
 					}
 				};
 				r.run();
 			}
 		});
-	
 
 	}
 
@@ -739,10 +767,10 @@ public class SearchFragment extends Fragment implements Observer {
 		adapter.add(l);
 	}
 
-	
-	private MultiAutoCompleteTextView createNewMultiCompleteTextView(){
-		
-		MultiAutoCompleteTextView view = new MultiAutoCompleteTextView(getActivity());
+	private MultiAutoCompleteTextView createNewMultiCompleteTextView() {
+
+		MultiAutoCompleteTextView view = new MultiAutoCompleteTextView(
+				getActivity());
 		view.setLayoutParams(textViews.get(0).getLayoutParams());
 		view.setAdapter(adapter);
 		setupTextViewDropdowns(view);
@@ -750,17 +778,16 @@ public class SearchFragment extends Fragment implements Observer {
 		textViews.add(view);
 		setupImeTypesAndListner(view);
 		setupfocusCHangeListener(view);
-		
+
 		return view;
-		
+
 	}
-	
+
 	private void SetupDropdown(View rootView) {
 		adapter = new ArrayAdapter<ILocation>(getActivity(),
-				android.R.layout.simple_dropdown_item_1line){
-			
-		}
-				;
+				android.R.layout.simple_dropdown_item_1line) {
+
+		};
 		Location l = new Location();
 		l.setDisplayname("Loading");
 		l.setLocationid(-1);
@@ -778,8 +805,7 @@ public class SearchFragment extends Fragment implements Observer {
 		MultiAutoCompleteTextView auto4 = (MultiAutoCompleteTextView) rootView
 				.findViewById(R.id.from4);
 		// the to
-		 autoTo = (MultiAutoCompleteTextView) rootView
-				.findViewById(R.id.to);
+		autoTo = (MultiAutoCompleteTextView) rootView.findViewById(R.id.to);
 
 		// InitialSetup
 		setupTextViewDropdowns(auto1);
@@ -802,84 +828,79 @@ public class SearchFragment extends Fragment implements Observer {
 		setupfocusCHangeListener(auto3);
 		setupfocusCHangeListener(auto4);
 		setupfocusCHangeListener(autoTo);
-		
+
 		setupListener();
-		 		
-			setupImeTypesAndListner(autoTo);
-			for(int i=0;i < textViews.size();i++)
-				setupImeTypesAndListner(textViews.get(i));
-			
+
+		setupImeTypesAndListner(autoTo);
+		for (int i = 0; i < textViews.size(); i++)
+			setupImeTypesAndListner(textViews.get(i));
+
 	}
 
-	private void setupImeTypesAndListner(MultiAutoCompleteTextView view)
-	{
+	private void setupImeTypesAndListner(MultiAutoCompleteTextView view) {
 		view.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		view.setRawInputType(InputType.TYPE_CLASS_TEXT); 
+		view.setRawInputType(InputType.TYPE_CLASS_TEXT);
 		view.setOnEditorActionListener(listner);
 	}
-	
-	private void setupfocusCHangeListener(MultiAutoCompleteTextView view)
-	{
+
+	private void setupfocusCHangeListener(MultiAutoCompleteTextView view) {
 		view.setOnFocusChangeListener(new OnFocusChangeListener() {
-					
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						// TODO Auto-generated method stub
-						if(hasFocus)
-						ScrollToView(v);
-					}
-				});
-	}
-	
-	private void setupListener()
-	{
-		if(listner==null)
-		listner = new OnEditorActionListener() {
-			
+
 			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				   
-				Log.d("here2", "!!!");
-	         if ( actionId == EditorInfo.IME_ACTION_NEXT )
-	        {               
-	        	 if(v.getId()==autoTo.getId())
-	        	 {
-		           // hide virtual keyboard
-		           InputMethodManager imm = 
-		              (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		           imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-		          scrollView.smoothScrollTo(0, scrollView.getBottom());
-		           return true;
-	        	 }
-	        	 else
-	        	 {
-	        		 if(textViews.indexOf(v)+1>=textViews.size())
-	        			 autoTo.requestFocus();
-	        		 else
-	        			 textViews.get(textViews.indexOf(v)+1).requestFocus();
-	        		 
-//	        		 switch(textViews.indexOf(v))
-//	        		 {
-//		        		 case 0: textViews.get(1).requestFocus();break;
-//		        		 case 1: textViews.get(2).requestFocus();break;	
-//		        		 case 2: textViews.get(3).requestFocus();break;
-//		        		 case 3: autoTo.requestFocus();break;
-//	        		 }
-	        		 
-	        		 return true;
-	        	 }
-	        }
-	        
-	        return false;
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+				if (hasFocus)
+					ScrollToView(v);
 			}
-		};
+		});
 	}
-	
-	
+
+	private void setupListener() {
+		if (listner == null)
+			listner = new OnEditorActionListener() {
+
+				@Override
+				public boolean onEditorAction(TextView v, int actionId,
+						KeyEvent event) {
+
+					Log.d("here2", "!!!");
+					if (actionId == EditorInfo.IME_ACTION_NEXT) {
+						if (v.getId() == autoTo.getId()) {
+							// hide virtual keyboard
+							InputMethodManager imm = (InputMethodManager) getActivity()
+									.getSystemService(
+											Context.INPUT_METHOD_SERVICE);
+							imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+							scrollView
+									.smoothScrollTo(0, scrollView.getBottom());
+							return true;
+						} else {
+							if (textViews.indexOf(v) + 1 >= textViews.size())
+								autoTo.requestFocus();
+							else
+								textViews.get(textViews.indexOf(v) + 1)
+										.requestFocus();
+
+							// switch(textViews.indexOf(v))
+							// {
+							// case 0: textViews.get(1).requestFocus();break;
+							// case 1: textViews.get(2).requestFocus();break;
+							// case 2: textViews.get(3).requestFocus();break;
+							// case 3: autoTo.requestFocus();break;
+							// }
+
+							return true;
+						}
+					}
+
+					return false;
+				}
+			};
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if(arg1 instanceof Integer)
+		if (arg1 instanceof Integer)
 			setSeekbarValue((Integer) arg1);
 
 	}

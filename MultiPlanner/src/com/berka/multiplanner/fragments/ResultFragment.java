@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
@@ -255,9 +257,12 @@ public class ResultFragment extends Fragment implements Observer {
 				if(buttonView.getId() == AnkomstSammaTid.getId())
 				{
 					if(isChecked)
+					
 						AnkomstIntervallText.setText(getActivity().getText(R.string.ankomst_intervall_1));
+					
 					else
 						AnkomstIntervallText.setText(getActivity().getText(R.string.ankomst_intervall_2));
+				AnkomstIntervallText.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
 				}
 				
 				updateListView();

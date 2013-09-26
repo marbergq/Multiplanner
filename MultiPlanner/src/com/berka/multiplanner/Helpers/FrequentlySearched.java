@@ -56,40 +56,48 @@ public class FrequentlySearched implements ISaveTrips {
 
 	@Override
 	public Set<ILocation> getStops() {
-		if(locations != null && locations.size() != 0) 
-			return locations;
 		
-		locations = new HashSet<ILocation>();
-			
-			try {
-			SharedPreferences  p = context.getSharedPreferences("SAVED", Activity.MODE_PRIVATE);
-			Map<String,String> map = (Map<String,String>)p.getAll();
-			
-			for(String x : map.values())		
-					locations.add(new Location(new JSONObject(x)));
-			
-		} catch (JSONException e) {
-			
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-	
-		return locations;
+		//ERROR
+		//Doesn't work, since the blueprint of json is malfunctioning
+//		if(locations != null && locations.size() != 0) 
+//			return locations;
+//		
+//		locations = new HashSet<ILocation>();
+//			
+//			try {
+//			SharedPreferences  p = context.getSharedPreferences("SAVED", Activity.MODE_PRIVATE);
+//			Map<String,String> map = (Map<String,String>)p.getAll();
+//			
+//			for(String x : map.values())		
+//					locations.add(new Location(new JSONObject(x)));
+//			
+//		} catch (JSONException e) {
+//			
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	
+//	
+//		return locations;
+		return new HashSet<ILocation>();
 }
 
 
 
 
 	public static ISaveTrips getInstance(Context context) {
-		if(me==null)
-			me = new FrequentlySearched(context);
-		return me;	
+//		if(me==null)
+//			me = new FrequentlySearched(context);
+//		return me;	
+		return null;
 	}
 	public static ISaveTrips getInstance() throws Exception {
-		if(me==null)
-			throw new Exception("Not instanciated!");
-		return me;	
+//		if(me==null)
+//			throw new Exception("Not instanciated!");
+//		return me;	
+		throw new Exception("No impl");
 	}
+		
 }
+
 

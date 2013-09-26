@@ -3,6 +3,7 @@ package com.berka.multiplanner.Helpers;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -98,8 +99,10 @@ public class ResultListViewUpdater extends AsyncTask<ListViewUpdaterModel, Integ
 					if(tripss.size() != 0)
 						Collections.sort(tripss);
 					trips.addAll(tripss);
+					setIsDone();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 						
 					}
@@ -132,36 +135,36 @@ public class ResultListViewUpdater extends AsyncTask<ListViewUpdaterModel, Integ
 		}
 	}
 	
+	private boolean isDone =false;
+	private void setIsDone() throws InterruptedException
+	{
+		isDone=true;
+	}
+	private boolean getIsDone()
+	{
+		return isDone;
+	}
+	
 	private Thread getCheckerThread(final ListViewUpdaterModel param,  final List<Trip> trips)
 	{
 		return new Thread(){
 			@Override
 			public void run(){
-				int maxTests = param.getPlanner().getFrom().size()*30;
-				int testNr=0;
 				while(true)
 				{
 					if(trips.size()>0){
-						Log.i("FINISH", "ALLDONE");
+						Log.i("getCheckerThread", "Size>0");
 						break;
 					}
 					else if(isCancelled()){
-						Log.i("FINISH", "cancel");
+						Log.i("getCheckerThread", "cancel");
 						break;
 					}
-					else if(testNr>=maxTests)
+					else if(getIsDone())
 					{
-						Log.i("ResultListView", "TIMEOUT ");
+						Log.i("getCheckerThread", "Finished");
 						break;
 					}
-					else
-						try {
-							sleep(50);
-							testNr++;
-						} catch (InterruptedException e) {
-							Log.i("FINISH", "INTERRUPTED:(");
-							break;
-						}
 				}
 				
 			}
